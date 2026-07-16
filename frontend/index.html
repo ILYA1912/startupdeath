@@ -35,8 +35,28 @@
       pointer-events: none;
     }
     .badge { display: inline-block; background: rgba(255,51,51,0.1); border: 1px solid rgba(255,51,51,0.3); color: var(--red); font-size: 13px; font-weight: 600; padding: 6px 16px; border-radius: 100px; margin-bottom: 24px; letter-spacing: 0.5px; }
-    .skull-wrap { font-size: 72px; margin-bottom: 20px; animation: float 3s ease-in-out infinite; }
-    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+    .skull-wrap {
+      font-size: 100px;
+      margin-bottom: 20px;
+      display: inline-block;
+      animation: float 3s ease-in-out infinite, flicker 5s step-end infinite;
+      filter: drop-shadow(0 0 20px rgba(255,30,30,0.9)) drop-shadow(0 0 60px rgba(255,0,0,0.5));
+      cursor: default;
+      user-select: none;
+    }
+    .skull-wrap:hover {
+      animation: shake 0.3s infinite, flicker 0.5s step-end infinite;
+      filter: drop-shadow(0 0 30px rgba(255,0,0,1)) drop-shadow(0 0 80px rgba(255,50,0,0.8));
+    }
+    @keyframes float { 0%,100%{transform:translateY(0) rotate(-2deg)} 50%{transform:translateY(-12px) rotate(2deg)} }
+    @keyframes shake {
+      0%{transform:translate(-3px,-1px) rotate(-3deg)}
+      25%{transform:translate(3px,1px) rotate(3deg)}
+      50%{transform:translate(-2px,2px) rotate(-2deg)}
+      75%{transform:translate(2px,-2px) rotate(1deg)}
+      100%{transform:translate(-3px,1px) rotate(-1deg)}
+    }
+    @keyframes flicker { 0%,95%,100%{opacity:1} 96%{opacity:0.6} 98%{opacity:0.8} }
     header h1 { font-size: clamp(40px, 8vw, 72px); font-weight: 900; background: linear-gradient(135deg, var(--red), var(--orange)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 16px; letter-spacing: -2px; }
     header .sub { font-size: 18px; color: var(--muted); max-width: 500px; margin: 0 auto 32px; line-height: 1.5; }
     .stats { display: flex; justify-content: center; gap: 32px; flex-wrap: wrap; margin-bottom: 8px; }
@@ -129,6 +149,23 @@
       .pro-card { flex-direction: column; text-align: center; }
     }
 
+    .blood-drips { position: relative; height: 32px; margin-top: -8px; margin-bottom: 12px; }
+    .drip {
+      position: absolute;
+      width: 6px;
+      background: linear-gradient(to bottom, #cc0000, #880000);
+      border-radius: 0 0 6px 6px;
+      top: 0;
+      animation: drip-fall 3s ease-in infinite;
+      opacity: 0;
+    }
+    @keyframes drip-fall {
+      0%   { opacity: 0; height: 0; }
+      20%  { opacity: 1; }
+      70%  { opacity: 1; }
+      100% { opacity: 0; transform: translateY(10px); }
+    }
+
     footer { text-align: center; padding: 32px 20px; color: #333; font-size: 13px; border-top: 1px solid var(--border); }
     footer a { color: #444; text-decoration: none; }
     footer a:hover { color: var(--red); }
@@ -138,7 +175,12 @@
 
 <header>
   <div class="badge">💀 Free · No signup · 30 seconds</div>
-  <div class="skull-wrap">💀</div>
+  <div class="skull-wrap" title="Hover me">💀</div>
+  <div class="blood-drips">
+    <span class="drip" style="left:44%;animation-delay:0s;height:18px"></span>
+    <span class="drip" style="left:50%;animation-delay:0.8s;height:28px"></span>
+    <span class="drip" style="left:56%;animation-delay:0.3s;height:14px"></span>
+  </div>
   <h1>StartupDeath</h1>
   <p class="sub">6 brutal AI agents destroy your startup idea and tell you exactly how it will fail.</p>
   <div class="stats">

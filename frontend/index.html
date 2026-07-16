@@ -131,6 +131,17 @@
     .try-again { margin-top: 14px; background: linear-gradient(135deg, var(--red), var(--orange)); border: none; border-radius: 10px; padding: 13px 32px; color: #fff; font-size: 14px; font-weight: 700; cursor: pointer; transition: opacity 0.2s; }
     .try-again:hover { opacity: 0.9; }
 
+    /* RESURRECTION */
+    .resurrection-banner { background: linear-gradient(135deg, #0a0a00, #1a1500); border: 1px solid rgba(255,200,0,0.3); border-radius: 16px; padding: 28px; text-align: center; margin-bottom: 20px; }
+    .resurrection-banner h3 { font-size: 20px; font-weight: 800; color: #ffd700; margin-bottom: 8px; }
+    .resurrection-banner p { color: #888; font-size: 14px; margin-bottom: 20px; line-height: 1.6; }
+    .btn-resurrect { background: linear-gradient(135deg, #ffd700, #ff8c00); border: none; border-radius: 10px; padding: 14px 32px; color: #000; font-size: 15px; font-weight: 800; cursor: pointer; transition: opacity 0.2s; }
+    .btn-resurrect:hover { opacity: 0.9; }
+    .resurrection-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 14px; margin-bottom: 28px; }
+    .resurrection-card { background: linear-gradient(135deg, #0a0a00, #0f0f00); border: 1px solid rgba(255,215,0,0.2); border-radius: 14px; padding: 22px; }
+    .resurrection-card .agent-name { color: #ffd700; }
+    .resurrection-fix { color: #22c55e; font-weight: 600; margin-top: 8px; }
+
     /* SOCIAL PROOF */
     .proof { max-width: 860px; margin: 0 auto 48px; padding: 0 20px; }
     .proof-title { text-align: center; font-size: 13px; text-transform: uppercase; letter-spacing: 2px; color: var(--muted); margin-bottom: 20px; font-weight: 600; }
@@ -281,6 +292,19 @@
   <p class="agents-title">Autopsy Report — 6 Perspectives</p>
   <div class="agents-grid" id="agents-grid"></div>
 
+  <!-- RESURRECTION BANNER -->
+  <div class="resurrection-banner" id="resurrection-banner">
+    <h3>💛 Resurrect Your Startup?</h3>
+    <p>The same 6 agents now flip roles — each one tells you exactly how to fix the fatal flaw they found. Get a survival plan, not just a death sentence.</p>
+    <button class="btn-resurrect" onclick="resurrect()">⚡ Resurrect My Idea — Pro Feature</button>
+  </div>
+
+  <!-- RESURRECTION RESULTS -->
+  <div id="resurrection-results" style="display:none">
+    <p class="agents-title" style="color:#ffd700">⚡ Resurrection Plan — How to Survive</p>
+    <div class="resurrection-grid" id="resurrection-grid"></div>
+  </div>
+
   <div class="share-section">
     <h3>Share the pain 💀</h3>
     <p>Let your friends know their ideas are also doomed</p>
@@ -409,6 +433,8 @@ function copyResult() {
 
 function tryAgain() {
   document.getElementById('results').style.display = 'none';
+  document.getElementById('resurrection-results').style.display = 'none';
+  document.getElementById('resurrection-banner').style.display = 'block';
   document.getElementById('idea').value = '';
   document.getElementById('description').value = '';
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -417,6 +443,44 @@ function tryAgain() {
 
 function goPro() {
   window.location.href = '/pricing';
+}
+
+async function resurrect() {
+  // Check if Pro (for now show pricing page)
+  const isPro = false;
+  if (!isPro) {
+    window.location.href = '/pricing';
+    return;
+  }
+  const idea = currentIdea;
+  document.getElementById('resurrection-banner').style.display = 'none';
+  const grid = document.getElementById('resurrection-grid');
+  grid.innerHTML = '<p style="color:#888;text-align:center;padding:20px">⚡ Resurrecting your idea...</p>';
+  document.getElementById('resurrection-results').style.display = 'block';
+
+  try {
+    const res = await fetch('/api/analyze', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ idea, resurrection: true })
+    });
+    const data = await res.json();
+    if (data.resurrection) {
+      grid.innerHTML = '';
+      data.resurrection.forEach(agent => {
+        const parts = agent.verdict.split(/THE FIX:/);
+        const main = parts[0].trim();
+        const fix = parts[1] ? parts[1].trim() : '';
+        grid.innerHTML += `
+          <div class="resurrection-card">
+            <div class="agent-name">${agent.agent}</div>
+            <div class="agent-text">${main}${fix ? `<div class="resurrection-fix">THE FIX: ${fix}</div>` : ''}</div>
+          </div>`;
+      });
+    }
+  } catch(e) {
+    grid.innerHTML = '<p style="color:#f00">Error. Try again.</p>';
+  }
 }
 
 async function joinWaitlist() {

@@ -1,4 +1,4 @@
-anthropic
+groq
 fastapi
 uvicorn
 python-dotenv

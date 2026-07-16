@@ -6,15 +6,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from dotenv import load_dotenv
-import anthropic
+from groq import Groq
 
 load_dotenv()
 
 app = FastAPI()
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
-client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
+client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
-# Kill counter
 COUNTER_FILE = "kill_count.json"
 
 def get_kill_count():
@@ -61,7 +60,28 @@ class StartupRequest(BaseModel):
     idea: str
     description: str = ""
 
-async def run_agent(agent: dict, idea: str, description: str) -> dict:
+class EmailRequest(BaseModel):
+    email: str
+
+# Simple in-memory waitlist (persisted to file)
+WAITLIST_FILE = "waitlist.json"
+
+def load_waitlist():
+    try:
+        with open(WAITLIST_FILE) as f:
+            return json.load(f)
+    except:
+        return []
+
+def save_email(email: str):
+    waitlist = load_waitlist()
+    if email not in waitlist:
+        waitlist.append(email)
+        with open(WAITLIST_FILE, "w") as f:
+            json.dump(waitlist, f)
+    return len(waitlist)
+
+def run_agent_sync(agent: dict, idea: str, description: str) -> dict:
     prompt = f"""Startup idea: {idea}
 {"Description: " + description if description else ""}
 
@@ -69,16 +89,25 @@ async def run_agent(agent: dict, idea: str, description: str) -> dict:
 
 Write 2-3 sharp paragraphs. Be specific and brutal."""
 
-    msg = client.messages.create(
-        model="claude-haiku-4-5-20251001",
+    msg = client.chat.completions.create(
+        model="llama-3.3-70b-versatile",
         max_tokens=400,
         messages=[{"role": "user", "content": prompt}]
     )
-    return {"agent": agent["name"], "verdict": msg.content[0].text}
+    return {"agent": agent["name"], "verdict": msg.choices[0].message.content}
+
+async def run_agent(agent: dict, idea: str, description: str) -> dict:
+    loop = asyncio.get_event_loop()
+    return await loop.run_in_executor(None, run_agent_sync, agent, idea, description)
 
 @app.get("/api/stats")
 async def get_stats():
-    return {"total": get_kill_count()}
+    return {"total": get_kill_count(), "waitlist": len(load_waitlist())}
+
+@app.post("/api/waitlist")
+async def join_waitlist(req: EmailRequest):
+    count = save_email(req.email)
+    return {"success": True, "position": count}
 
 @app.post("/api/analyze")
 async def analyze(request: StartupRequest):
@@ -95,18 +124,19 @@ FOUNDER'S LAST WORDS: "..." (funny/sad quote)
 
 Keep it short, dramatic, and memorable."""
 
-    summary_msg = client.messages.create(
-        model="claude-haiku-4-5-20251001",
+    loop = asyncio.get_event_loop()
+    summary_msg = await loop.run_in_executor(None, lambda: client.chat.completions.create(
+        model="llama-3.3-70b-versatile",
         max_tokens=200,
         messages=[{"role": "user", "content": summary_prompt}]
-    )
+    ))
 
     increment_kill_count()
 
     return {
         "idea": request.idea,
         "agents": list(results),
-        "summary": summary_msg.content[0].text
+        "summary": summary_msg.choices[0].message.content
     }
 
 app.mount("/", StaticFiles(directory="../frontend", html=True), name="frontend")

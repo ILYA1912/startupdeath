@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StartupDeath Pro — $9/month</title>
+  <meta name="description" content="Upgrade to Pro and get unlimited startup destructions, saved results, and API access.">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #080808;
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+    }
+    .back { color: #666; text-decoration: none; font-size: 14px; align-self: flex-start; margin-bottom: 40px; }
+    .back:hover { color: #fff; }
+    h1 { font-size: 2.5rem; font-weight: 900; margin-bottom: 8px; }
+    .subtitle { color: #666; font-size: 1.1rem; margin-bottom: 60px; }
+    .plans {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      justify-content: center;
+      width: 100%;
+      max-width: 800px;
+    }
+    .plan {
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 16px;
+      padding: 32px;
+      flex: 1;
+      min-width: 280px;
+      max-width: 360px;
+    }
+    .plan.featured {
+      border-color: #ff3b3b;
+      position: relative;
+    }
+    .badge {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, #ff3b3b, #ff6b35);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 16px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+    .plan-name { font-size: 1.1rem; color: #888; margin-bottom: 8px; }
+    .plan-price {
+      font-size: 3rem;
+      font-weight: 900;
+      margin-bottom: 4px;
+    }
+    .plan-price span { font-size: 1rem; color: #666; font-weight: 400; }
+    .plan-desc { color: #666; font-size: 14px; margin-bottom: 28px; }
+    .features { list-style: none; margin-bottom: 32px; }
+    .features li {
+      padding: 8px 0;
+      font-size: 15px;
+      color: #ccc;
+      border-bottom: 1px solid #1a1a1a;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .features li:last-child { border-bottom: none; }
+    .check { color: #22c55e; font-size: 16px; }
+    .cross { color: #444; font-size: 16px; }
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 16px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      text-align: center;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .btn:hover { opacity: 0.85; }
+    .btn-free {
+      background: #1a1a1a;
+      color: #888;
+      border: 1px solid #333;
+    }
+    .btn-pro {
+      background: linear-gradient(135deg, #ff3b3b, #ff6b35);
+      color: #fff;
+    }
+    .guarantee {
+      margin-top: 48px;
+      text-align: center;
+      color: #444;
+      font-size: 14px;
+    }
+    .guarantee strong { color: #666; }
+    .faq {
+      margin-top: 60px;
+      width: 100%;
+      max-width: 600px;
+    }
+    .faq h2 { font-size: 1.5rem; margin-bottom: 24px; color: #ccc; }
+    .faq-item { margin-bottom: 20px; }
+    .faq-q { font-weight: 700; color: #ccc; margin-bottom: 6px; }
+    .faq-a { color: #666; font-size: 14px; line-height: 1.6; }
+  </style>
+</head>
+<body>
+  <a href="/" class="back">← Back to StartupDeath</a>
+
+  <h1>💀 Choose Your Plan</h1>
+  <p class="subtitle">Both plans kill your startup. Pro just kills it faster.</p>
+
+  <div class="plans">
+    <!-- FREE -->
+    <div class="plan">
+      <div class="plan-name">FREE</div>
+      <div class="plan-price">$0 <span>/ forever</span></div>
+      <div class="plan-desc">Good enough to hurt</div>
+      <ul class="features">
+        <li><span class="check">✓</span> 3 analyses per day</li>
+        <li><span class="check">✓</span> All 6 AI agents</li>
+        <li><span class="check">✓</span> Certificate of Death</li>
+        <li><span class="check">✓</span> Share on Twitter</li>
+        <li><span class="cross">✗</span> Save results</li>
+        <li><span class="cross">✗</span> Resurrection mode</li>
+        <li><span class="cross">✗</span> API access</li>
+        <li><span class="cross">✗</span> Priority speed</li>
+      </ul>
+      <a href="/" class="btn btn-free">Start Free</a>
+    </div>
+
+    <!-- PRO -->
+    <div class="plan featured">
+      <div class="badge">MOST POPULAR</div>
+      <div class="plan-name">PRO</div>
+      <div class="plan-price">$9 <span>/ month</span></div>
+      <div class="plan-desc">For serious founders</div>
+      <ul class="features">
+        <li><span class="check">✓</span> Unlimited analyses</li>
+        <li><span class="check">✓</span> All 6 AI agents</li>
+        <li><span class="check">✓</span> Certificate of Death</li>
+        <li><span class="check">✓</span> Share on Twitter</li>
+        <li><span class="check">✓</span> Save & share results</li>
+        <li><span class="check">✓</span> <strong>Resurrection mode</strong> 🔥</li>
+        <li><span class="check">✓</span> API access</li>
+        <li><span class="check">✓</span> 3× faster analysis</li>
+      </ul>
+      <button class="btn btn-pro" onclick="goPro()">Get Pro — $9/month</button>
+    </div>
+  </div>
+
+  <div class="guarantee">
+    <strong>7-day money-back guarantee.</strong> If StartupDeath doesn't destroy at least one of your ideas, we'll refund you.
+  </div>
+
+  <div class="faq">
+    <h2>FAQ</h2>
+    <div class="faq-item">
+      <div class="faq-q">What is Resurrection mode?</div>
+      <div class="faq-a">After the 6 agents kill your idea, they flip — and each one tells you exactly how to fix the fatal flaw they found. You get a survival plan, not just a death sentence.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Can I cancel anytime?</div>
+      <div class="faq-a">Yes. Cancel in one click, no questions asked. Your subscription stops at the end of the billing period.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What is API access?</div>
+      <div class="faq-a">Pro users get an API key to run StartupDeath programmatically — integrate it into your own tools, Notion, or Slack.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Is my idea kept private?</div>
+      <div class="faq-a">Yes. We never store your ideas. Each analysis runs and disappears. Pro users can optionally save results themselves.</div>
+    </div>
+  </div>
+
+  <script>
+    function goPro() {
+      // Replace this URL with your Stripe Payment Link
+      const stripeLink = 'STRIPE_PAYMENT_LINK_HERE';
+      if (stripeLink === 'STRIPE_PAYMENT_LINK_HERE') {
+        alert('Payment coming soon! Join the waitlist on the main page to get notified.');
+        window.location.href = '/';
+      } else {
+        window.location.href = stripeLink;
+      }
+    }
+  </script>
+</body>
+</html>

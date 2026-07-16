@@ -1,5 +1,6 @@
 import os
 import asyncio
+import json
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -12,6 +13,22 @@ load_dotenv()
 app = FastAPI()
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
+
+# Kill counter
+COUNTER_FILE = "kill_count.json"
+
+def get_kill_count():
+    try:
+        with open(COUNTER_FILE) as f:
+            return json.load(f).get("total", 0)
+    except:
+        return 0
+
+def increment_kill_count():
+    count = get_kill_count() + 1
+    with open(COUNTER_FILE, "w") as f:
+        json.dump({"total": count}, f)
+    return count
 
 AGENTS = [
     {
@@ -59,6 +76,10 @@ Write 2-3 sharp paragraphs. Be specific and brutal."""
     )
     return {"agent": agent["name"], "verdict": msg.content[0].text}
 
+@app.get("/api/stats")
+async def get_stats():
+    return {"total": get_kill_count()}
+
 @app.post("/api/analyze")
 async def analyze(request: StartupRequest):
     tasks = [run_agent(a, request.idea, request.description) for a in AGENTS]
@@ -79,6 +100,8 @@ Keep it short, dramatic, and memorable."""
         max_tokens=200,
         messages=[{"role": "user", "content": summary_prompt}]
     )
+
+    increment_kill_count()
 
     return {
         "idea": request.idea,

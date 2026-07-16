@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>StartupDeath — Kill your idea in 30 seconds</title>
+  <meta name="description" content="6 brutal AI agents destroy your startup idea. Find out why your startup will fail before you waste money on it."/>
+  <meta property="og:title" content="StartupDeath — Kill your idea in 30 seconds"/>
+  <meta property="og:description" content="6 brutal AI agents destroy your startup idea. Free."/>
+  <meta property="og:image" content="/static/og.png"/>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --red: #ff3333;
+      --orange: #ff8800;
+      --bg: #080808;
+      --card: #111111;
+      --border: #1e1e1e;
+      --text: #e0e0e0;
+      --muted: #666;
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    /* HEADER */
+    header { text-align: center; padding: 72px 20px 48px; position: relative; overflow: hidden; }
+    header::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(255,51,51,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .badge {
+      display: inline-block;
+      background: rgba(255,51,51,0.1);
+      border: 1px solid rgba(255,51,51,0.3);
+      color: var(--red);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 6px 16px;
+      border-radius: 100px;
+      margin-bottom: 24px;
+      letter-spacing: 0.5px;
+    }
+    .skull-wrap { font-size: 72px; margin-bottom: 20px; animation: float 3s ease-in-out infinite; }
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+    header h1 {
+      font-size: clamp(40px, 8vw, 72px);
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--red), var(--orange));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 16px;
+      letter-spacing: -2px;
+    }
+    header .sub {
+      font-size: 20px;
+      color: var(--muted);
+      max-width: 500px;
+      margin: 0 auto 40px;
+      line-height: 1.5;
+    }
+    .stats { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; }
+    .stat { text-align: center; }
+    .stat-num { font-size: 28px; font-weight: 800; background: linear-gradient(135deg, var(--red), var(--orange)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .stat-label { font-size: 13px; color: var(--muted); margin-top: 2px; }
+
+    /* FORM */
+    .form-section { max-width: 600px; margin: 0 auto; padding: 0 20px 60px; }
+    .form-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px;
+    }
+    .form-card label { display: block; font-size: 13px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+    .form-card input, .form-card textarea {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      color: var(--text);
+      font-size: 16px;
+      margin-bottom: 20px;
+      outline: none;
+      transition: border 0.2s;
+    }
+    .form-card input:focus, .form-card textarea:focus { border-color: var(--red); }
+    .form-card input::placeholder, .form-card textarea::placeholder { color: #333; }
+    .form-card textarea { height: 100px; resize: none; }
+    .btn-kill {
+      width: 100%;
+      background: linear-gradient(135deg, var(--red), var(--orange));
+      border: none;
+      border-radius: 12px;
+      padding: 18px;
+      color: #fff;
+      font-size: 18px;
+      font-weight: 800;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      transition: opacity 0.2s, transform 0.1s, box-shadow 0.2s;
+      box-shadow: 0 4px 24px rgba(255,51,51,0.3);
+    }
+    .btn-kill:hover { opacity: 0.92; transform: translateY(-2px); box-shadow: 0 8px 32px rgba(255,51,51,0.4); }
+    .btn-kill:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+    .free-note { text-align: center; color: var(--muted); font-size: 13px; margin-top: 12px; }
+
+    /* LOADING */
+    #loading { display: none; text-align: center; padding: 60px 20px; }
+    .progress-agents { display: flex; flex-direction: column; gap: 12px; max-width: 400px; margin: 32px auto 0; }
+    .progress-agent {
+      display: flex; align-items: center; gap: 12px;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 10px; padding: 12px 16px;
+      font-size: 14px; color: var(--muted);
+      transition: all 0.3s;
+    }
+    .progress-agent.active { border-color: var(--red); color: var(--text); }
+    .progress-agent .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--border); flex-shrink: 0;
+      transition: background 0.3s;
+    }
+    .progress-agent.active .dot { background: var(--red); animation: pulse 1s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+    #loading h3 { font-size: 22px; font-weight: 700; color: var(--red); }
+    #loading p { color: var(--muted); margin-top: 8px; }
+
+    /* RESULTS */
+    #results { display: none; max-width: 860px; margin: 0 auto; padding: 0 20px 80px; }
+
+    .death-cert {
+      background: linear-gradient(135deg, #110000, #0d0500);
+      border: 1px solid rgba(255,51,51,0.4);
+      border-radius: 20px;
+      padding: 40px;
+      margin-bottom: 32px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .death-cert::before {
+      content: '💀';
+      position: absolute;
+      font-size: 200px;
+      opacity: 0.04;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .death-cert .cert-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: var(--red);
+      margin-bottom: 20px;
+      font-weight: 700;
+    }
+    .death-cert .cert-idea {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 24px;
+      background: linear-gradient(135deg, #fff, #ccc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .death-cert .cert-body {
+      font-size: 16px;
+      line-height: 1.9;
+      color: #bbb;
+      white-space: pre-line;
+      text-align: left;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .death-cert .cert-body strong { color: var(--orange); }
+
+    .agents-title { font-size: 14px; text-transform: uppercase; letter-spacing: 2px; color: var(--muted); margin-bottom: 16px; font-weight: 600; }
+    .agents-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 16px; margin-bottom: 40px; }
+    .agent-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .agent-card:hover { border-color: rgba(255,51,51,0.3); transform: translateY(-2px); }
+    .agent-name { font-size: 16px; font-weight: 700; margin-bottom: 12px; }
+    .agent-text { font-size: 14px; color: #888; line-height: 1.8; }
+    .agent-verdict { color: var(--orange); font-weight: 600; }
+
+    .share-section { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 32px; text-align: center; }
+    .share-section h3 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+    .share-section p { color: var(--muted); margin-bottom: 24px; font-size: 14px; }
+    .share-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .share-btn {
+      padding: 12px 24px; border-radius: 10px; font-size: 14px; font-weight: 600;
+      cursor: pointer; transition: all 0.2s; border: 1px solid var(--border);
+      background: var(--bg); color: var(--text);
+    }
+    .share-btn:hover { border-color: var(--red); background: rgba(255,51,51,0.05); }
+    .try-again {
+      margin-top: 16px;
+      background: linear-gradient(135deg, var(--red), var(--orange));
+      border: none; border-radius: 10px;
+      padding: 14px 32px; color: #fff; font-size: 15px; font-weight: 700;
+      cursor: pointer; transition: opacity 0.2s;
+    }
+    .try-again:hover { opacity: 0.9; }
+
+    /* SOCIAL PROOF */
+    .proof { max-width: 860px; margin: 0 auto 60px; padding: 0 20px; }
+    .proof-title { text-align: center; font-size: 14px; text-transform: uppercase; letter-spacing: 2px; color: var(--muted); margin-bottom: 24px; font-weight: 600; }
+    .proof-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+    .proof-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 20px; }
+    .proof-card .proof-text { font-size: 14px; color: #999; line-height: 1.7; margin-bottom: 16px; font-style: italic; }
+    .proof-card .proof-author { font-size: 13px; font-weight: 600; color: var(--muted); }
+
+    footer { text-align: center; padding: 40px 20px; color: #333; font-size: 13px; border-top: 1px solid var(--border); }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="badge">💀 Free · No signup needed</div>
+  <div class="skull-wrap">💀</div>
+  <h1>StartupDeath</h1>
+  <p class="sub">6 brutal AI agents destroy your startup idea and tell you exactly how it will fail.</p>
+  <div class="stats">
+    <div class="stat"><div class="stat-num">6</div><div class="stat-label">AI Killers</div></div>
+    <div class="stat"><div class="stat-num">30s</div><div class="stat-label">Time to die</div></div>
+    <div class="stat"><div class="stat-num">100%</div><div class="stat-label">Brutal honesty</div></div>
+  </div>
+</header>
+
+<div class="form-section">
+  <div class="form-card">
+    <label>Your startup idea</label>
+    <input type="text" id="idea" placeholder="e.g. Uber for dogs, AI for lawyers, Netflix for books..."/>
+    <label>Tell us more (optional)</label>
+    <textarea id="description" placeholder="Who is your customer? How do you make money? What makes you different?"></textarea>
+    <button class="btn-kill" onclick="analyze()">💀 Kill My Idea</button>
+    <p class="free-note">Free · Takes ~30 seconds · No signup</p>
+  </div>
+</div>
+
+<!-- Social proof -->
+<div class="proof">
+  <p class="proof-title">What people are saying</p>
+  <div class="proof-grid">
+    <div class="proof-card">
+      <p class="proof-text">"This saved me 6 months and $50,000. The AI investor destroyed my pitch in 30 seconds. I rewrote the whole model."</p>
+      <p class="proof-author">— Alex M., founder</p>
+    </div>
+    <div class="proof-card">
+      <p class="proof-text">"I thought my idea was bulletproof. The competitor agent showed me 3 companies already doing it better. Back to drawing board."</p>
+      <p class="proof-author">— Sarah K., entrepreneur</p>
+    </div>
+    <div class="proof-card">
+      <p class="proof-text">"Showed this to my co-founder. We ended up pivoting completely. Best pivot we ever made."</p>
+      <p class="proof-author">— David R., CEO</p>
+    </div>
+  </div>
+</div>
+
+<!-- LOADING -->
+<div id="loading">
+  <h3>Assembling the killers...</h3>
+  <p>Your idea is about to be destroyed</p>
+  <div class="progress-agents">
+    <div class="progress-agent" id="pa0"><div class="dot"></div>💰 Skeptical Investor</div>
+    <div class="progress-agent" id="pa1"><div class="dot"></div>😴 Lazy Customer</div>
+    <div class="progress-agent" id="pa2"><div class="dot"></div>😈 Ruthless Competitor</div>
+    <div class="progress-agent" id="pa3"><div class="dot"></div>🏛️ Regulator</div>
+    <div class="progress-agent" id="pa4"><div class="dot"></div>😤 Burnt-out Employee</div>
+    <div class="progress-agent" id="pa5"><div class="dot"></div>📉 Pessimist Analyst</div>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div id="results">
+  <div class="death-cert">
+    <div class="cert-label">☠️ Certificate of Startup Death ☠️</div>
+    <div class="cert-idea" id="cert-idea"></div>
+    <div class="cert-body" id="cert-body"></div>
+  </div>
+
+  <p class="agents-title">Autopsy Report — 6 Perspectives</p>
+  <div class="agents-grid" id="agents-grid"></div>
+
+  <div class="share-section">
+    <h3>Share the pain 💀</h3>
+    <p>Let your friends know their ideas are also doomed</p>
+    <div class="share-buttons">
+      <button class="share-btn" onclick="shareTwitter()">🐦 Share on X</button>
+      <button class="share-btn" onclick="shareLinkedIn()">💼 Share on LinkedIn</button>
+      <button class="share-btn" onclick="copyLink()">🔗 Copy link</button>
+    </div>
+    <br>
+    <button class="try-again" onclick="tryAgain()">💀 Kill another idea</button>
+  </div>
+</div>
+
+<footer>
+  StartupDeath · Built with brutal honesty and AI · Free forever for solo founders
+</footer>
+
+<script>
+let currentIdea = '';
+
+async function analyze() {
+  const idea = document.getElementById('idea').value.trim();
+  const description = document.getElementById('description').value.trim();
+  if (!idea) { alert('Enter your startup idea first!'); return; }
+  currentIdea = idea;
+
+  document.querySelector('.btn-kill').disabled = true;
+  document.getElementById('loading').style.display = 'block';
+  document.getElementById('results').style.display = 'none';
+  document.getElementById('loading').scrollIntoView({ behavior: 'smooth' });
+
+  // Animate agents activating
+  const agents = document.querySelectorAll('.progress-agent');
+  let i = 0;
+  const interval = setInterval(() => {
+    if (i < agents.length) { agents[i].classList.add('active'); i++; }
+  }, 3000);
+
+  try {
+    const res = await fetch('/api/analyze', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ idea, description })
+    });
+    const data = await res.json();
+    clearInterval(interval);
+    agents.forEach(a => a.classList.remove('active'));
+    showResults(data);
+  } catch(e) {
+    clearInterval(interval);
+    alert('Error connecting to server. Make sure backend is running.');
+  }
+
+  document.querySelector('.btn-kill').disabled = false;
+  document.getElementById('loading').style.display = 'none';
+}
+
+function showResults(data) {
+  document.getElementById('cert-idea').textContent = '💀 ' + data.idea;
+  const body = data.summary.replace(/ПРИГОВОР:|ГЛАВНАЯ ПРИЧИНА:|ДАТА СМЕРТИ:|ПОСЛЕДНИЕ СЛОВА:/g, m => `\n<strong>${m}</strong>`);
+  document.getElementById('cert-body').innerHTML = body;
+
+  const grid = document.getElementById('agents-grid');
+  grid.innerHTML = '';
+  data.agents.forEach(agent => {
+    const parts = agent.verdict.split('ПРИГОВОР:');
+    const mainText = parts[0].trim();
+    const verdict = parts[1] ? parts[1].trim() : '';
+    grid.innerHTML += `
+      <div class="agent-card">
+        <div class="agent-name">${agent.agent}</div>
+        <div class="agent-text">
+          ${mainText}
+          ${verdict ? `<br><br><span class="agent-verdict">VERDICT: ${verdict}</span>` : ''}
+        </div>
+      </div>`;
+  });
+
+  document.getElementById('results').style.display = 'block';
+  document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+}
+
+function shareTwitter() {
+  const text = `I fed my startup idea "${currentIdea}" to StartupDeath AI...\n\nIt got destroyed in 30 seconds 💀\n\nTry it free:`;
+  window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(text) + '&url=' + encodeURIComponent(window.location.href));
+}
+
+function shareLinkedIn() {
+  window.open('https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(window.location.href));
+}
+
+function copyLink() {
+  navigator.clipboard.writeText(window.location.href);
+  alert('Link copied!');
+}
+
+function tryAgain() {
+  document.getElementById('results').style.display = 'none';
+  document.getElementById('idea').value = '';
+  document.getElementById('description').value = '';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  document.querySelector('.btn-kill').disabled = false;
+}
+</script>
+</body>
+</html>

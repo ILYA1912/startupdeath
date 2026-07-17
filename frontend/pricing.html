@@ -159,6 +159,7 @@
         <li><span class="check">✓</span> 3× faster analysis</li>
       </ul>
       <button class="btn btn-pro" onclick="goPro()">Get Pro — $9/month</button>
+      <p id="waitlist-success" style="display:none;margin-top:12px;color:#22c55e;font-size:14px;font-weight:600"></p>
     </div>
   </div>
 
@@ -187,14 +188,41 @@
   </div>
 
   <script>
-    function goPro() {
-      // Replace this URL with your Stripe Payment Link
-      const stripeLink = 'STRIPE_PAYMENT_LINK_HERE';
-      if (stripeLink === 'STRIPE_PAYMENT_LINK_HERE') {
-        alert('Payment coming soon! Join the waitlist on the main page to get notified.');
-        window.location.href = '/';
+    // Load Stripe link from server
+    fetch('/api/config').then(r=>r.json()).then(d=>{ if(d.stripe_link) window.STRIPE_LINK = d.stripe_link; });
+
+    async function goPro() {
+      const btn = document.querySelector('.btn-pro');
+      btn.disabled = true;
+      btn.textContent = '...';
+
+      // Collect email first
+      const email = prompt('Enter your email to get started:');
+      if (!email || !email.includes('@')) {
+        btn.disabled = false;
+        btn.textContent = 'Get Pro — $9/month';
+        return;
+      }
+
+      // Save to waitlist
+      try {
+        await fetch('/api/waitlist', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ email })
+        });
+      } catch(e) {}
+
+      // Redirect to Stripe (replace with real link when ready)
+      const stripeLink = window.STRIPE_LINK || null;
+      if (stripeLink) {
+        window.location.href = stripeLink + '?prefilled_email=' + encodeURIComponent(email);
       } else {
-        window.location.href = stripeLink;
+        btn.disabled = false;
+        btn.textContent = 'Get Pro — $9/month';
+        document.getElementById('waitlist-success').style.display = 'block';
+        document.getElementById('waitlist-success').textContent =
+          '✓ Got it! We\'ll email ' + email + ' when Pro launches (within 48h).';
       }
     }
   </script>

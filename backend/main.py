@@ -176,4 +176,9 @@ Be brutal, specific, and memorable. No generic statements."""
         "resurrection": resurrection_results
     }
 
+@app.get("/api/config")
+async def get_config():
+    stripe_link = os.getenv("STRIPE_PAYMENT_LINK", "")
+    return {"stripe_link": stripe_link}
+
 app.mount("/", StaticFiles(directory="../frontend", html=True), name="frontend")

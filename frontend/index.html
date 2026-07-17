@@ -3,507 +3,788 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>StartupDeath — Kill your startup idea in 30 seconds</title>
-  <meta name="description" content="6 brutal AI agents destroy your startup idea. Find out why your startup will fail before you waste money on it. Free, no signup."/>
-  <meta name="keywords" content="startup idea validator, test startup idea, startup failure, AI startup analysis, startup feedback"/>
-  <meta property="og:title" content="StartupDeath — Kill your idea in 30 seconds"/>
-  <meta property="og:description" content="6 brutal AI agents destroy your startup idea. Free. No signup."/>
+  <title>StartupDeath — Find out why your startup will fail</title>
+  <meta name="description" content="6 brutal AI experts destroy your startup idea in 30 seconds. Free. No signup. Brutally honest."/>
+  <meta property="og:title" content="StartupDeath — Find out why your startup will fail"/>
+  <meta property="og:description" content="6 AI experts destroy your startup idea in 30 seconds. Free."/>
   <meta property="og:type" content="website"/>
-  <meta property="og:url" content="https://startupdeath.onrender.com"/>
   <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="twitter:title" content="StartupDeath — Kill your startup idea in 30 seconds"/>
-  <meta name="twitter:description" content="6 brutal AI agents destroy your startup idea. Free."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet"/>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     :root {
-      --red: #ff3333;
-      --orange: #ff8800;
-      --bg: #080808;
-      --card: #111111;
-      --border: #1e1e1e;
-      --text: #e0e0e0;
-      --muted: #666;
-    }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
-
-    /* HEADER */
-    header { text-align: center; padding: 60px 20px 40px; position: relative; overflow: hidden; }
-    header::before {
-      content: '';
-      position: absolute; inset: 0;
-      background: radial-gradient(ellipse at 50% 0%, rgba(255,51,51,0.12) 0%, transparent 70%);
-      pointer-events: none;
-    }
-    .badge { display: inline-block; background: rgba(255,51,51,0.1); border: 1px solid rgba(255,51,51,0.3); color: var(--red); font-size: 13px; font-weight: 600; padding: 6px 16px; border-radius: 100px; margin-bottom: 24px; letter-spacing: 0.5px; }
-    .skull-wrap {
-      font-size: 100px;
-      margin-bottom: 20px;
-      display: inline-block;
-      animation: float 3s ease-in-out infinite, flicker 5s step-end infinite;
-      filter: drop-shadow(0 0 20px rgba(255,30,30,0.9)) drop-shadow(0 0 60px rgba(255,0,0,0.5));
-      cursor: default;
-      user-select: none;
-    }
-    .skull-wrap:hover {
-      animation: shake 0.3s infinite, flicker 0.5s step-end infinite;
-      filter: drop-shadow(0 0 30px rgba(255,0,0,1)) drop-shadow(0 0 80px rgba(255,50,0,0.8));
-    }
-    @keyframes float { 0%,100%{transform:translateY(0) rotate(-2deg)} 50%{transform:translateY(-12px) rotate(2deg)} }
-    @keyframes shake {
-      0%{transform:translate(-3px,-1px) rotate(-3deg)}
-      25%{transform:translate(3px,1px) rotate(3deg)}
-      50%{transform:translate(-2px,2px) rotate(-2deg)}
-      75%{transform:translate(2px,-2px) rotate(1deg)}
-      100%{transform:translate(-3px,1px) rotate(-1deg)}
-    }
-    @keyframes flicker { 0%,95%,100%{opacity:1} 96%{opacity:0.6} 98%{opacity:0.8} }
-    header h1 { font-size: clamp(40px, 8vw, 72px); font-weight: 900; background: linear-gradient(135deg, var(--red), var(--orange)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 16px; letter-spacing: -2px; }
-    header .sub { font-size: 18px; color: var(--muted); max-width: 500px; margin: 0 auto 32px; line-height: 1.5; }
-    .stats { display: flex; justify-content: center; gap: 32px; flex-wrap: wrap; margin-bottom: 8px; }
-    .stat { text-align: center; }
-    .stat-num { font-size: 28px; font-weight: 800; background: linear-gradient(135deg, var(--red), var(--orange)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .stat-label { font-size: 12px; color: var(--muted); margin-top: 2px; }
-
-    /* COUNTER */
-    .kill-counter { text-align: center; padding: 12px; color: var(--muted); font-size: 14px; margin-bottom: 8px; }
-    .kill-counter span { color: var(--red); font-weight: 700; font-size: 16px; }
-
-    /* FORM */
-    .form-section { max-width: 600px; margin: 0 auto; padding: 0 20px 40px; }
-    .form-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 28px; }
-    .form-card label { display: block; font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
-    .form-card input, .form-card textarea { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; color: var(--text); font-size: 16px; margin-bottom: 16px; outline: none; transition: border 0.2s; }
-    .form-card input:focus, .form-card textarea:focus { border-color: var(--red); }
-    .form-card input::placeholder, .form-card textarea::placeholder { color: #333; }
-    .form-card textarea { height: 90px; resize: none; }
-    .btn-kill { width: 100%; background: linear-gradient(135deg, var(--red), var(--orange)); border: none; border-radius: 12px; padding: 18px; color: #fff; font-size: 18px; font-weight: 800; cursor: pointer; letter-spacing: 0.5px; transition: opacity 0.2s, transform 0.1s, box-shadow 0.2s; box-shadow: 0 4px 24px rgba(255,51,51,0.3); }
-    .btn-kill:hover { opacity: 0.92; transform: translateY(-2px); box-shadow: 0 8px 32px rgba(255,51,51,0.4); }
-    .btn-kill:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
-    .free-note { text-align: center; color: var(--muted); font-size: 12px; margin-top: 10px; }
-
-    /* PRO BANNER */
-    .pro-banner { max-width: 600px; margin: 0 auto 40px; padding: 0 20px; }
-    .pro-card { background: linear-gradient(135deg, #0d0d0d, #1a0a00); border: 1px solid rgba(255,136,0,0.3); border-radius: 16px; padding: 20px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
-    .pro-text h4 { font-size: 15px; font-weight: 700; color: var(--orange); margin-bottom: 4px; }
-    .pro-text p { font-size: 13px; color: var(--muted); }
-    .pro-btn { background: linear-gradient(135deg, var(--orange), #ff5500); border: none; border-radius: 10px; padding: 10px 24px; color: #fff; font-size: 14px; font-weight: 700; cursor: pointer; white-space: nowrap; transition: opacity 0.2s; }
-    .pro-btn:hover { opacity: 0.9; }
-
-    /* LOADING */
-    #loading { display: none; text-align: center; padding: 60px 20px; }
-    .progress-agents { display: flex; flex-direction: column; gap: 10px; max-width: 380px; margin: 28px auto 0; }
-    .progress-agent { display: flex; align-items: center; gap: 12px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 11px 16px; font-size: 14px; color: var(--muted); transition: all 0.3s; }
-    .progress-agent.active { border-color: var(--red); color: var(--text); }
-    .progress-agent .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); flex-shrink: 0; transition: background 0.3s; }
-    .progress-agent.active .dot { background: var(--red); animation: pulse 1s infinite; }
-    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
-    #loading h3 { font-size: 22px; font-weight: 700; color: var(--red); }
-    #loading p { color: var(--muted); margin-top: 8px; }
-
-    /* RESULTS */
-    #results { display: none; max-width: 860px; margin: 0 auto; padding: 0 20px 80px; }
-    .death-cert { background: linear-gradient(135deg, #110000, #0d0500); border: 1px solid rgba(255,51,51,0.4); border-radius: 20px; padding: 36px; margin-bottom: 28px; text-align: center; position: relative; overflow: hidden; }
-    .death-cert::before { content: '💀'; position: absolute; font-size: 200px; opacity: 0.04; top: 50%; left: 50%; transform: translate(-50%, -50%); }
-    .death-cert .cert-label { font-size: 11px; text-transform: uppercase; letter-spacing: 3px; color: var(--red); margin-bottom: 16px; font-weight: 700; }
-    .death-cert .cert-idea { font-size: 26px; font-weight: 800; margin-bottom: 20px; background: linear-gradient(135deg, #fff, #ccc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .death-cert .cert-body { font-size: 15px; line-height: 1.9; color: #bbb; white-space: pre-line; text-align: left; max-width: 600px; margin: 0 auto; }
-    .death-cert .cert-body strong { color: var(--orange); }
-
-    /* SHARE RESULT */
-    .share-result { display: flex; gap: 10px; justify-content: center; margin-top: 20px; flex-wrap: wrap; }
-    .share-result-btn { padding: 8px 18px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid var(--border); background: var(--bg); color: var(--text); transition: all 0.2s; }
-    .share-result-btn:hover { border-color: var(--red); }
-
-    .agents-title { font-size: 13px; text-transform: uppercase; letter-spacing: 2px; color: var(--muted); margin-bottom: 14px; font-weight: 600; }
-    .agents-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 14px; margin-bottom: 32px; }
-    .agent-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 22px; transition: border-color 0.2s, transform 0.2s; }
-    .agent-card:hover { border-color: rgba(255,51,51,0.3); transform: translateY(-2px); }
-    .agent-name { font-size: 15px; font-weight: 700; margin-bottom: 10px; }
-    .agent-text { font-size: 14px; color: #888; line-height: 1.8; }
-    .agent-verdict { color: var(--orange); font-weight: 600; }
-
-    .share-section { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 28px; text-align: center; }
-    .share-section h3 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
-    .share-section p { color: var(--muted); margin-bottom: 20px; font-size: 13px; }
-    .share-buttons { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
-    .share-btn { padding: 11px 22px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; border: 1px solid var(--border); background: var(--bg); color: var(--text); }
-    .share-btn:hover { border-color: var(--red); background: rgba(255,51,51,0.05); }
-    .try-again { margin-top: 14px; background: linear-gradient(135deg, var(--red), var(--orange)); border: none; border-radius: 10px; padding: 13px 32px; color: #fff; font-size: 14px; font-weight: 700; cursor: pointer; transition: opacity 0.2s; }
-    .try-again:hover { opacity: 0.9; }
-
-    /* RESURRECTION */
-    .resurrection-banner { background: linear-gradient(135deg, #0a0a00, #1a1500); border: 1px solid rgba(255,200,0,0.3); border-radius: 16px; padding: 28px; text-align: center; margin-bottom: 20px; }
-    .resurrection-banner h3 { font-size: 20px; font-weight: 800; color: #ffd700; margin-bottom: 8px; }
-    .resurrection-banner p { color: #888; font-size: 14px; margin-bottom: 20px; line-height: 1.6; }
-    .btn-resurrect { background: linear-gradient(135deg, #ffd700, #ff8c00); border: none; border-radius: 10px; padding: 14px 32px; color: #000; font-size: 15px; font-weight: 800; cursor: pointer; transition: opacity 0.2s; }
-    .btn-resurrect:hover { opacity: 0.9; }
-    .resurrection-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 14px; margin-bottom: 28px; }
-    .resurrection-card { background: linear-gradient(135deg, #0a0a00, #0f0f00); border: 1px solid rgba(255,215,0,0.2); border-radius: 14px; padding: 22px; }
-    .resurrection-card .agent-name { color: #ffd700; }
-    .resurrection-fix { color: #22c55e; font-weight: 600; margin-top: 8px; }
-
-    /* SOCIAL PROOF */
-    .proof { max-width: 860px; margin: 0 auto 48px; padding: 0 20px; }
-    .proof-title { text-align: center; font-size: 13px; text-transform: uppercase; letter-spacing: 2px; color: var(--muted); margin-bottom: 20px; font-weight: 600; }
-    .proof-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
-    .proof-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 18px; }
-    .proof-card .proof-text { font-size: 14px; color: #999; line-height: 1.7; margin-bottom: 12px; font-style: italic; }
-    .proof-card .proof-author { font-size: 12px; font-weight: 600; color: var(--muted); }
-
-    /* MOBILE */
-    @media (max-width: 600px) {
-      header { padding: 40px 16px 32px; }
-      header h1 { font-size: 42px; }
-      .form-card { padding: 20px; }
-      .agents-grid { grid-template-columns: 1fr; }
-      .stats { gap: 20px; }
-      .pro-card { flex-direction: column; text-align: center; }
+      --red: #e63030;
+      --red-dark: #b01f1f;
+      --orange: #e8720c;
+      --bg: #0a0a0a;
+      --bg2: #111;
+      --border: #1f1f1f;
+      --text: #e8e8e8;
+      --muted: #5a5a5a;
+      --muted2: #888;
     }
 
-    .blood-drips { position: relative; height: 32px; margin-top: -8px; margin-bottom: 12px; }
-    .drip {
-      position: absolute;
-      width: 6px;
-      background: linear-gradient(to bottom, #cc0000, #880000);
-      border-radius: 0 0 6px 6px;
-      top: 0;
-      animation: drip-fall 3s ease-in infinite;
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 80px 24px 0;
+      text-align: center;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(230,48,48,0.08);
+      border: 1px solid rgba(230,48,48,0.2);
+      color: #e06060;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border-radius: 100px;
+      margin-bottom: 32px;
+    }
+
+    .hero-skull {
+      font-size: 88px;
+      display: block;
+      margin-bottom: 4px;
+      filter: drop-shadow(0 0 32px rgba(230,48,48,0.6));
+      animation: breathe 4s ease-in-out infinite;
+    }
+    @keyframes breathe {
+      0%,100% { transform: scale(1) rotate(-1deg); filter: drop-shadow(0 0 24px rgba(230,48,48,0.5)); }
+      50% { transform: scale(1.04) rotate(1deg); filter: drop-shadow(0 0 48px rgba(230,48,48,0.8)); }
+    }
+
+    .blood-row {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 28px;
+      height: 20px;
+    }
+    .drop {
+      width: 5px;
+      border-radius: 0 0 5px 5px;
+      background: linear-gradient(#c00, #700);
+      animation: drip 2.5s ease-in infinite;
       opacity: 0;
     }
-    @keyframes drip-fall {
-      0%   { opacity: 0; height: 0; }
-      20%  { opacity: 1; }
-      70%  { opacity: 1; }
-      100% { opacity: 0; transform: translateY(10px); }
+    .drop:nth-child(1) { height: 14px; animation-delay: 0s; }
+    .drop:nth-child(2) { height: 20px; animation-delay: 0.7s; }
+    .drop:nth-child(3) { height: 10px; animation-delay: 1.3s; }
+    @keyframes drip { 0%{opacity:0;transform:translateY(0)} 20%{opacity:1} 80%{opacity:1} 100%{opacity:0;transform:translateY(8px)} }
+
+    .hero h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(36px, 6vw, 60px);
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -1px;
+      margin-bottom: 20px;
+      color: #fff;
+    }
+    .hero h1 em {
+      font-style: normal;
+      background: linear-gradient(135deg, var(--red), var(--orange));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
-    footer { text-align: center; padding: 32px 20px; color: #333; font-size: 13px; border-top: 1px solid var(--border); }
-    footer a { color: #444; text-decoration: none; }
+    .hero-sub {
+      font-size: 18px;
+      color: var(--muted2);
+      line-height: 1.6;
+      max-width: 520px;
+      margin: 0 auto 40px;
+    }
+
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin-bottom: 56px;
+      flex-wrap: wrap;
+    }
+    .stat { text-align: center; }
+    .stat-n {
+      font-size: 28px;
+      font-weight: 800;
+      color: #fff;
+      display: block;
+    }
+    .stat-l { font-size: 12px; color: var(--muted); margin-top: 2px; letter-spacing: 0.5px; }
+
+    /* ── FORM ── */
+    .form-wrap {
+      max-width: 620px;
+      margin: 0 auto;
+      padding: 0 24px 24px;
+    }
+    .form-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px;
+      position: relative;
+    }
+    .form-card::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, rgba(230,48,48,0.15), transparent 60%);
+      pointer-events: none;
+    }
+
+    .field-label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 10px;
+    }
+    .field-input {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      color: var(--text);
+      font-size: 16px;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+      transition: border-color 0.2s;
+      margin-bottom: 16px;
+    }
+    .field-input:focus { border-color: rgba(230,48,48,0.5); }
+    .field-input::placeholder { color: #333; }
+    textarea.field-input { height: 80px; resize: none; }
+
+    .btn-kill {
+      width: 100%;
+      background: linear-gradient(135deg, var(--red), var(--orange));
+      border: none;
+      border-radius: 12px;
+      padding: 17px;
+      color: #fff;
+      font-size: 17px;
+      font-weight: 800;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      letter-spacing: 0.3px;
+      transition: all 0.2s;
+      box-shadow: 0 4px 32px rgba(230,48,48,0.3);
+      position: relative;
+    }
+    .btn-kill:hover { transform: translateY(-2px); box-shadow: 0 8px 40px rgba(230,48,48,0.45); }
+    .btn-kill:active { transform: translateY(0); }
+    .btn-kill:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+    .form-note { text-align: center; color: var(--muted); font-size: 12px; margin-top: 12px; }
+
+    /* ── PRO STRIP ── */
+    .pro-strip {
+      max-width: 620px;
+      margin: 16px auto 48px;
+      padding: 0 24px;
+    }
+    .pro-inner {
+      background: linear-gradient(135deg, #0e0a00, #1a1000);
+      border: 1px solid rgba(232,114,12,0.25);
+      border-radius: 14px;
+      padding: 18px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .pro-inner p { font-size: 14px; color: #888; }
+    .pro-inner p strong { color: #e8720c; }
+    .btn-pro {
+      background: linear-gradient(135deg, #e8720c, #c45500);
+      border: none;
+      border-radius: 8px;
+      padding: 9px 20px;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      font-family: 'Inter', sans-serif;
+      transition: opacity 0.2s;
+    }
+    .btn-pro:hover { opacity: 0.88; }
+
+    /* ── SOCIAL PROOF ── */
+    .proof-section {
+      max-width: 860px;
+      margin: 0 auto 64px;
+      padding: 0 24px;
+    }
+    .section-label {
+      text-align: center;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+    .proof-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px;
+    }
+    .proof-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+    }
+    .proof-quote { font-size: 14px; color: #999; line-height: 1.7; margin-bottom: 14px; }
+    .proof-quote::before { content: '"'; color: var(--red); font-size: 18px; }
+    .proof-author { font-size: 12px; font-weight: 600; color: var(--muted); }
+    .proof-stars { color: #e8720c; font-size: 12px; margin-bottom: 8px; }
+
+    /* ── LOADING ── */
+    #loading {
+      display: none;
+      max-width: 440px;
+      margin: 0 auto;
+      padding: 60px 24px;
+      text-align: center;
+    }
+    .loading-title { font-size: 20px; font-weight: 700; color: var(--red); margin-bottom: 6px; }
+    .loading-sub { font-size: 14px; color: var(--muted2); margin-bottom: 32px; }
+    .agent-list { display: flex; flex-direction: column; gap: 8px; }
+    .agent-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 11px 16px;
+      font-size: 14px;
+      color: var(--muted2);
+      transition: all 0.3s;
+      text-align: left;
+    }
+    .agent-row.active { border-color: rgba(230,48,48,0.4); color: var(--text); background: rgba(230,48,48,0.04); }
+    .dot { width: 7px; height: 7px; border-radius: 50%; background: #222; flex-shrink: 0; transition: background 0.3s; }
+    .agent-row.active .dot { background: var(--red); animation: blink 1s infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+    /* ── RESULTS ── */
+    #results {
+      display: none;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 24px 100px;
+    }
+
+    /* Certificate */
+    .cert-wrap {
+      margin-bottom: 32px;
+      position: relative;
+    }
+    .cert {
+      background: #0d0000;
+      border: 2px solid rgba(230,48,48,0.35);
+      border-radius: 16px;
+      padding: 48px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cert::before {
+      content: '💀';
+      position: absolute;
+      font-size: 280px;
+      opacity: 0.025;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+    .cert-corner {
+      position: absolute;
+      width: 32px;
+      height: 32px;
+      border-color: rgba(230,48,48,0.4);
+      border-style: solid;
+    }
+    .cert-corner.tl { top: 14px; left: 14px; border-width: 2px 0 0 2px; }
+    .cert-corner.tr { top: 14px; right: 14px; border-width: 2px 2px 0 0; }
+    .cert-corner.bl { bottom: 14px; left: 14px; border-width: 0 0 2px 2px; }
+    .cert-corner.br { bottom: 14px; right: 14px; border-width: 0 2px 2px 0; }
+
+    .cert-header {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: rgba(230,48,48,0.6);
+      margin-bottom: 6px;
+    }
+    .cert-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      font-weight: 900;
+      color: rgba(230,48,48,0.9);
+      margin-bottom: 24px;
+      letter-spacing: -0.5px;
+    }
+    .cert-divider {
+      width: 80px;
+      height: 1px;
+      background: rgba(230,48,48,0.3);
+      margin: 0 auto 24px;
+    }
+    .cert-idea {
+      font-size: 26px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 28px;
+      line-height: 1.2;
+    }
+    .cert-body {
+      font-size: 15px;
+      line-height: 2;
+      color: #bbb;
+      max-width: 560px;
+      margin: 0 auto 28px;
+      text-align: left;
+      white-space: pre-line;
+    }
+    .cert-body strong { color: var(--orange); font-weight: 700; }
+
+    .cert-stamp {
+      display: inline-block;
+      border: 3px solid rgba(230,48,48,0.6);
+      border-radius: 50%;
+      width: 90px;
+      height: 90px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      margin: 0 auto 28px;
+      transform: rotate(-12deg);
+      opacity: 0.85;
+    }
+    .cert-stamp span:first-child { font-size: 9px; font-weight: 800; letter-spacing: 2px; color: var(--red); text-transform: uppercase; }
+    .cert-stamp span:last-child { font-size: 22px; }
+
+    .cert-share {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .share-btn {
+      padding: 9px 18px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      transition: all 0.2s;
+    }
+    .share-btn:hover { border-color: rgba(230,48,48,0.4); background: rgba(230,48,48,0.06); }
+
+    /* Agents grid */
+    .results-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+    .agents-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+      gap: 14px;
+      margin-bottom: 32px;
+    }
+    .agent-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 22px;
+      transition: border-color 0.2s;
+    }
+    .agent-card:hover { border-color: rgba(230,48,48,0.25); }
+    .agent-name { font-size: 14px; font-weight: 700; margin-bottom: 12px; color: #ccc; }
+    .agent-text { font-size: 14px; color: #777; line-height: 1.8; }
+    .agent-verdict { color: var(--orange); font-weight: 600; margin-top: 10px; display: block; }
+
+    /* Resurrection */
+    .resurrect-banner {
+      background: linear-gradient(135deg, #0a0800, #120e00);
+      border: 1px solid rgba(232,114,12,0.25);
+      border-radius: 16px;
+      padding: 28px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .resurrect-banner h3 { font-size: 18px; font-weight: 800; color: #e8a020; margin-bottom: 8px; }
+    .resurrect-banner p { color: #666; font-size: 14px; margin-bottom: 18px; line-height: 1.6; }
+    .btn-resurrect {
+      background: linear-gradient(135deg, #e8a020, #c47000);
+      border: none;
+      border-radius: 10px;
+      padding: 12px 28px;
+      color: #000;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: opacity 0.2s;
+    }
+    .btn-resurrect:hover { opacity: 0.88; }
+
+    /* Share section */
+    .share-section {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      text-align: center;
+    }
+    .share-section h3 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+    .share-section p { color: var(--muted2); font-size: 13px; margin-bottom: 20px; }
+    .share-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 14px; }
+    .btn-again {
+      background: linear-gradient(135deg, var(--red), var(--orange));
+      border: none;
+      border-radius: 10px;
+      padding: 12px 28px;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: opacity 0.2s;
+    }
+    .btn-again:hover { opacity: 0.88; }
+
+    /* Resurrection results */
+    .res-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+    .res-card {
+      background: linear-gradient(135deg, #090900, #0d0d00);
+      border: 1px solid rgba(232,114,12,0.15);
+      border-radius: 14px;
+      padding: 22px;
+    }
+    .res-card .agent-name { color: #c88820; }
+    .res-fix { color: #4ade80; font-weight: 600; margin-top: 10px; display: block; font-size: 14px; }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 28px 24px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    footer a { color: #444; text-decoration: none; transition: color 0.2s; }
     footer a:hover { color: var(--red); }
+
+    /* Mobile */
+    @media (max-width: 600px) {
+      .hero { padding: 48px 20px 0; }
+      .hero h1 { font-size: 34px; }
+      .hero-skull { font-size: 72px; }
+      .cert { padding: 28px 20px; }
+      .agents-grid, .res-grid { grid-template-columns: 1fr; }
+      .hero-stats { gap: 24px; }
+      .form-card { padding: 22px; }
+      .pro-inner { flex-direction: column; text-align: center; }
+    }
   </style>
 </head>
 <body>
 
-<header>
-  <div class="badge">💀 Free · No signup · 30 seconds</div>
-  <div class="skull-wrap" title="Hover me">💀</div>
-  <div class="blood-drips">
-    <span class="drip" style="left:44%;animation-delay:0s;height:18px"></span>
-    <span class="drip" style="left:50%;animation-delay:0.8s;height:28px"></span>
-    <span class="drip" style="left:56%;animation-delay:0.3s;height:14px"></span>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow">💀 Free · No signup · 30 seconds</div>
+  <span class="hero-skull">💀</span>
+  <div class="blood-row">
+    <span class="drop"></span>
+    <span class="drop"></span>
+    <span class="drop"></span>
   </div>
-  <h1>StartupDeath</h1>
-  <p class="sub">6 brutal AI agents destroy your startup idea and tell you exactly how it will fail.</p>
-  <div class="stats">
-    <div class="stat"><div class="stat-num">6</div><div class="stat-label">AI Killers</div></div>
-    <div class="stat"><div class="stat-num" id="kill-count">0</div><div class="stat-label">Ideas Killed</div></div>
-    <div class="stat"><div class="stat-num">100%</div><div class="stat-label">Brutal Honesty</div></div>
+  <h1>Your startup idea is<br><em>probably wrong.</em><br>Find out now.</h1>
+  <p class="hero-sub">6 AI experts destroy your idea before you waste months on it. Investor, customer, competitor, lawyer, employee, analyst — all at once.</p>
+  <div class="hero-stats">
+    <div class="stat"><span class="stat-n" id="kill-count">0</span><span class="stat-l">ideas killed</span></div>
+    <div class="stat"><span class="stat-n">6</span><span class="stat-l">AI killers</span></div>
+    <div class="stat"><span class="stat-n">30s</span><span class="stat-l">time to death</span></div>
   </div>
-</header>
+</section>
 
-<div class="kill-counter">💀 <span id="counter-text">0</span> startup ideas killed and counting</div>
-
-<div class="form-section">
+<!-- FORM -->
+<div class="form-wrap">
   <div class="form-card">
-    <label>Your startup idea</label>
-    <input type="text" id="idea" placeholder="e.g. Uber for dogs, AI for lawyers, Netflix for books..."/>
-    <label>Tell us more (optional)</label>
-    <textarea id="description" placeholder="Who is your customer? How do you make money? What makes you different?"></textarea>
+    <label class="field-label" for="idea">Your startup idea</label>
+    <input class="field-input" type="text" id="idea" placeholder="e.g. Uber for dogs, AI lawyer, Netflix for books…" autocomplete="off"/>
+    <label class="field-label" for="desc">More context <span style="color:#333;font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></label>
+    <textarea class="field-input" id="desc" placeholder="Who pays? How do you make money? What makes you different?"></textarea>
     <button class="btn-kill" onclick="analyze()">💀 Kill My Idea</button>
-    <p class="free-note">Free forever for solo founders · Takes ~30 seconds</p>
+    <p class="form-note">Free forever · No account needed · Takes ~30 seconds</p>
   </div>
 </div>
 
-<!-- PRO BANNER -->
-<div class="pro-banner">
-  <div class="pro-card">
-    <div class="pro-text">
-      <h4>🚀 Go Pro — $9/month</h4>
-      <p>Unlimited kills · Save results · Share links · Priority speed</p>
-    </div>
-    <button class="pro-btn" onclick="goPro()">Upgrade →</button>
+<!-- PRO -->
+<div class="pro-strip">
+  <div class="pro-inner">
+    <p><strong>Pro — $9/mo:</strong> Unlimited kills · Save results · Resurrection mode · API access</p>
+    <button class="btn-pro" onclick="goPro()">Upgrade →</button>
   </div>
 </div>
 
-<!-- WAITLIST -->
-<div class="pro-banner" style="margin-top:0">
-  <div class="pro-card" style="flex-direction:column;text-align:center;gap:14px" id="waitlist-form">
-    <div>
-      <h4 style="color:#ff8800;font-size:15px;font-weight:700;margin-bottom:4px">🚀 Pro launching soon — get early access</h4>
-      <p style="color:#666;font-size:13px">Unlimited kills · Save results · Resurrection mode · API access</p>
-    </div>
-    <div style="display:flex;gap:8px;width:100%;max-width:400px;margin:0 auto">
-      <input id="waitlist-email" type="email" placeholder="your@email.com"
-        style="flex:1;background:#080808;border:1px solid #333;border-radius:8px;padding:10px 14px;color:#fff;font-size:14px;outline:none"/>
-      <button id="waitlist-btn" onclick="joinWaitlist()"
-        style="background:linear-gradient(135deg,#ff8800,#ff5500);border:none;border-radius:8px;padding:10px 18px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap">
-        Notify me
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- Social proof -->
-<div class="proof">
-  <p class="proof-title">What founders are saying</p>
+<!-- SOCIAL PROOF -->
+<section class="proof-section">
+  <p class="section-label">What founders say</p>
   <div class="proof-grid">
     <div class="proof-card">
-      <p class="proof-text">"This saved me 6 months and $50,000. The AI investor destroyed my pitch in 30 seconds. I rewrote the whole model."</p>
+      <div class="proof-stars">★★★★★</div>
+      <p class="proof-quote">This saved me 6 months and $40,000. The investor agent destroyed my pitch in 30 seconds. I rewrote the whole model.</p>
       <p class="proof-author">— Alex M., founder</p>
     </div>
     <div class="proof-card">
-      <p class="proof-text">"I thought my idea was bulletproof. The competitor agent showed me 3 companies already doing it better."</p>
+      <div class="proof-stars">★★★★★</div>
+      <p class="proof-quote">I thought my idea was bulletproof. The competitor agent found 3 companies already doing it better. Pivoted immediately.</p>
       <p class="proof-author">— Sarah K., entrepreneur</p>
     </div>
     <div class="proof-card">
-      <p class="proof-text">"Showed this to my co-founder. We ended up pivoting completely. Best pivot we ever made."</p>
+      <div class="proof-stars">★★★★★</div>
+      <p class="proof-quote">Showed my co-founder. We argued, then pivoted completely. Best decision we've made. Still alive 18 months later.</p>
       <p class="proof-author">— David R., CEO</p>
     </div>
   </div>
-</div>
+</section>
 
 <!-- LOADING -->
 <div id="loading">
-  <h3>Assembling the killers...</h3>
-  <p>Your idea is about to be destroyed</p>
-  <div class="progress-agents">
-    <div class="progress-agent" id="pa0"><div class="dot"></div>💰 Skeptical Investor</div>
-    <div class="progress-agent" id="pa1"><div class="dot"></div>😴 Lazy Customer</div>
-    <div class="progress-agent" id="pa2"><div class="dot"></div>😈 Ruthless Competitor</div>
-    <div class="progress-agent" id="pa3"><div class="dot"></div>🏛️ Regulator</div>
-    <div class="progress-agent" id="pa4"><div class="dot"></div>😤 Burnt-out Employee</div>
-    <div class="progress-agent" id="pa5"><div class="dot"></div>📉 Pessimist Analyst</div>
+  <p class="loading-title">Assembling the killers…</p>
+  <p class="loading-sub">Your idea is about to meet its end</p>
+  <div class="agent-list">
+    <div class="agent-row" id="pa0"><div class="dot"></div>💰 Skeptical Investor</div>
+    <div class="agent-row" id="pa1"><div class="dot"></div>😴 Lazy Customer</div>
+    <div class="agent-row" id="pa2"><div class="dot"></div>😈 Ruthless Competitor</div>
+    <div class="agent-row" id="pa3"><div class="dot"></div>🏛️ Regulator & Lawyer</div>
+    <div class="agent-row" id="pa4"><div class="dot"></div>😤 Burnt-out Employee</div>
+    <div class="agent-row" id="pa5"><div class="dot"></div>📉 Pessimist Analyst</div>
   </div>
 </div>
 
 <!-- RESULTS -->
 <div id="results">
-  <div class="death-cert">
-    <div class="cert-label">☠️ Certificate of Startup Death ☠️</div>
-    <div class="cert-idea" id="cert-idea"></div>
-    <div class="cert-body" id="cert-body"></div>
-    <div class="share-result">
-      <button class="share-result-btn" onclick="shareTwitter()">🐦 Share on X</button>
-      <button class="share-result-btn" onclick="shareLinkedIn()">💼 LinkedIn</button>
-      <button class="share-result-btn" onclick="copyResult()">🔗 Copy link</button>
+
+  <!-- Certificate -->
+  <div class="cert-wrap">
+    <div class="cert">
+      <div class="cert-corner tl"></div>
+      <div class="cert-corner tr"></div>
+      <div class="cert-corner bl"></div>
+      <div class="cert-corner br"></div>
+      <p class="cert-header">Official Document</p>
+      <p class="cert-title">Certificate of Startup Death</p>
+      <div class="cert-divider"></div>
+      <div class="cert-stamp">
+        <span>Deceased</span>
+        <span>☠️</span>
+      </div>
+      <p class="cert-idea" id="cert-idea"></p>
+      <div class="cert-body" id="cert-body"></div>
+      <div class="cert-share">
+        <button class="share-btn" onclick="shareTwitter()">🐦 Share on X</button>
+        <button class="share-btn" onclick="shareLinkedIn()">💼 LinkedIn</button>
+        <button class="share-btn" onclick="copyResult()">🔗 Copy link</button>
+      </div>
     </div>
   </div>
 
-  <p class="agents-title">Autopsy Report — 6 Perspectives</p>
+  <!-- Agent cards -->
+  <p class="results-label">Autopsy Report — 6 Expert Verdicts</p>
   <div class="agents-grid" id="agents-grid"></div>
 
-  <!-- RESURRECTION BANNER -->
-  <div class="resurrection-banner" id="resurrection-banner">
-    <h3>💛 Resurrect Your Startup?</h3>
-    <p>The same 6 agents now flip roles — each one tells you exactly how to fix the fatal flaw they found. Get a survival plan, not just a death sentence.</p>
-    <button class="btn-resurrect" onclick="resurrect()">⚡ Resurrect My Idea — Pro Feature</button>
+  <!-- Resurrection -->
+  <div class="resurrect-banner" id="res-banner">
+    <h3>⚡ Want to survive?</h3>
+    <p>The same 6 experts now flip roles — each one tells you exactly how to fix the fatal flaw they found. A survival plan, not just a death sentence.</p>
+    <button class="btn-resurrect" onclick="resurrect()">Resurrect My Idea — Pro Feature</button>
+  </div>
+  <div id="res-results" style="display:none">
+    <p class="results-label" style="color:#c88820">⚡ Resurrection Plan</p>
+    <div class="res-grid" id="res-grid"></div>
   </div>
 
-  <!-- RESURRECTION RESULTS -->
-  <div id="resurrection-results" style="display:none">
-    <p class="agents-title" style="color:#ffd700">⚡ Resurrection Plan — How to Survive</p>
-    <div class="resurrection-grid" id="resurrection-grid"></div>
-  </div>
-
+  <!-- Share -->
   <div class="share-section">
-    <h3>Share the pain 💀</h3>
-    <p>Let your friends know their ideas are also doomed</p>
-    <div class="share-buttons">
+    <h3>Spread the pain 💀</h3>
+    <p>Your friends' ideas are also doomed. Let them know.</p>
+    <div class="share-row">
       <button class="share-btn" onclick="shareTwitter()">🐦 Share on X</button>
-      <button class="share-btn" onclick="shareLinkedIn()">💼 Share on LinkedIn</button>
-      <button class="share-btn" onclick="copyResult()">🔗 Copy link</button>
+      <button class="share-btn" onclick="shareLinkedIn()">💼 LinkedIn</button>
+      <button class="share-btn" onclick="copyResult()">🔗 Copy</button>
     </div>
-    <br>
-    <button class="try-again" onclick="tryAgain()">💀 Kill another idea</button>
+    <button class="btn-again" onclick="tryAgain()">💀 Kill another idea</button>
   </div>
+
 </div>
 
 <footer>
-  <p>StartupDeath · Built with 💀 and Claude AI · <a href="/examples">See examples</a> · <a href="https://github.com/ILYA1912/startupdeath" target="_blank">GitHub</a></p>
-  <p style="margin-top:8px;">Better to know now than after spending your savings.</p>
+  <p>StartupDeath · <a href="/examples">See examples</a> · <a href="/pricing">Pricing</a> · <a href="https://github.com/ILYA1912/startupdeath" target="_blank">GitHub</a></p>
+  <p style="margin-top:6px">Better to know now than after spending your savings.</p>
 </footer>
 
 <script>
-let currentIdea = '';
-let killCount = 0;
+  let currentIdea = '';
+  let killCount = 0;
 
-// Animate kill counter
-function animateCounter(target) {
-  const el = document.getElementById('kill-count');
-  const el2 = document.getElementById('counter-text');
-  let current = killCount;
-  const step = Math.ceil((target - current) / 20);
-  const timer = setInterval(() => {
-    current = Math.min(current + step, target);
-    el.textContent = current.toLocaleString();
-    el2.textContent = current.toLocaleString();
-    if (current >= target) clearInterval(timer);
-  }, 50);
-  killCount = target;
-}
-
-// Load kill count from server
-async function loadKillCount() {
-  try {
-    const res = await fetch('/api/stats');
-    const data = await res.json();
-    animateCounter(data.total || 0);
-  } catch(e) {
-    animateCounter(247); // fallback number
-  }
-}
-loadKillCount();
-
-async function analyze() {
-  const idea = document.getElementById('idea').value.trim();
-  const description = document.getElementById('description').value.trim();
-  if (!idea) { alert('Enter your startup idea first!'); return; }
-  currentIdea = idea;
-
-  document.querySelector('.btn-kill').disabled = true;
-  document.getElementById('loading').style.display = 'block';
-  document.getElementById('results').style.display = 'none';
-  document.getElementById('loading').scrollIntoView({ behavior: 'smooth' });
-
-  const agents = document.querySelectorAll('.progress-agent');
-  let i = 0;
-  const interval = setInterval(() => {
-    if (i < agents.length) { agents[i].classList.add('active'); i++; }
-  }, 3500);
-
-  try {
-    const res = await fetch('/api/analyze', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ idea, description })
-    });
-    const data = await res.json();
-    clearInterval(interval);
-    agents.forEach(a => a.classList.remove('active'));
-    showResults(data);
-    animateCounter(killCount + 1);
-  } catch(e) {
-    clearInterval(interval);
-    alert('Error connecting to server. Please try again.');
+  function animateCount(target) {
+    const el = document.getElementById('kill-count');
+    const start = killCount;
+    const diff = target - start;
+    if (diff <= 0) { el.textContent = target; killCount = target; return; }
+    let i = 0;
+    const steps = 30;
+    const t = setInterval(() => {
+      i++;
+      el.textContent = Math.round(start + (diff * i / steps));
+      if (i >= steps) { clearInterval(t); el.textContent = target; killCount = target; }
+    }, 40);
   }
 
-  document.querySelector('.btn-kill').disabled = false;
-  document.getElementById('loading').style.display = 'none';
-}
-
-function showResults(data) {
-  document.getElementById('cert-idea').textContent = '💀 ' + data.idea;
-  const body = data.summary.replace(/(MAIN CAUSE OF DEATH:|TIME OF DEATH:|FOUNDER'S LAST WORDS:|ГЛАВНАЯ ПРИЧИНА:|ДАТА СМЕРТИ:|ПОСЛЕДНИЕ СЛОВА:)/g, m => `\n<strong>${m}</strong>`);
-  document.getElementById('cert-body').innerHTML = body;
-
-  const grid = document.getElementById('agents-grid');
-  grid.innerHTML = '';
-  data.agents.forEach(agent => {
-    const parts = agent.verdict.split(/VERDICT:|ПРИГОВОР:/);
-    const mainText = parts[0].trim();
-    const verdict = parts[1] ? parts[1].trim() : '';
-    grid.innerHTML += `
-      <div class="agent-card">
-        <div class="agent-name">${agent.agent}</div>
-        <div class="agent-text">
-          ${mainText}
-          ${verdict ? `<br><br><span class="agent-verdict">VERDICT: ${verdict}</span>` : ''}
-        </div>
-      </div>`;
-  });
-
-  document.getElementById('results').style.display = 'block';
-  document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
-}
-
-function shareTwitter() {
-  const text = `I fed my startup idea "${currentIdea}" to StartupDeath AI...\n\nIt got destroyed in 30 seconds 💀\n\nTry it free (it's brutal):`;
-  window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(text) + '&url=' + encodeURIComponent(window.location.href));
-}
-
-function shareLinkedIn() {
-  window.open('https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(window.location.href));
-}
-
-function copyResult() {
-  const text = `My startup idea "${currentIdea}" was destroyed by StartupDeath AI 💀\n${window.location.href}`;
-  navigator.clipboard.writeText(text);
-  alert('Copied to clipboard!');
-}
-
-function tryAgain() {
-  document.getElementById('results').style.display = 'none';
-  document.getElementById('resurrection-results').style.display = 'none';
-  document.getElementById('resurrection-banner').style.display = 'block';
-  document.getElementById('idea').value = '';
-  document.getElementById('description').value = '';
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-  document.querySelector('.btn-kill').disabled = false;
-}
-
-function goPro() {
-  window.location.href = '/pricing';
-}
-
-async function resurrect() {
-  // Check if Pro (for now show pricing page)
-  const isPro = false;
-  if (!isPro) {
-    window.location.href = '/pricing';
-    return;
+  async function loadStats() {
+    try {
+      const r = await fetch('/api/stats');
+      const d = await r.json();
+      animateCount(d.total || 0);
+    } catch { animateCount(312); }
   }
-  const idea = currentIdea;
-  document.getElementById('resurrection-banner').style.display = 'none';
-  const grid = document.getElementById('resurrection-grid');
-  grid.innerHTML = '<p style="color:#888;text-align:center;padding:20px">⚡ Resurrecting your idea...</p>';
-  document.getElementById('resurrection-results').style.display = 'block';
+  loadStats();
 
-  try {
-    const res = await fetch('/api/analyze', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ idea, resurrection: true })
-    });
-    const data = await res.json();
-    if (data.resurrection) {
-      grid.innerHTML = '';
-      data.resurrection.forEach(agent => {
-        const parts = agent.verdict.split(/THE FIX:/);
-        const main = parts[0].trim();
-        const fix = parts[1] ? parts[1].trim() : '';
-        grid.innerHTML += `
-          <div class="resurrection-card">
-            <div class="agent-name">${agent.agent}</div>
-            <div class="agent-text">${main}${fix ? `<div class="resurrection-fix">THE FIX: ${fix}</div>` : ''}</div>
-          </div>`;
+  async function analyze() {
+    const idea = document.getElementById('idea').value.trim();
+    const desc = document.getElementById('desc').value.trim();
+    if (!idea) { document.getElementById('idea').focus(); return; }
+    currentIdea = idea;
+
+    document.querySelector('.btn-kill').disabled = true;
+    document.querySelector('.btn-kill').textContent = '⏳ Killing your idea…';
+    document.getElementById('loading').style.display = 'block';
+    document.getElementById('results').style.display = 'none';
+    document.getElementById('loading').scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    const rows = document.querySelectorAll('.agent-row');
+    let i = 0;
+    const tick = setInterval(() => { if (i < rows.length) { rows[i].classList.add('active'); i++; } }, 3800);
+
+    try {
+      const r = await fetch('/api/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ idea, description: desc })
       });
+      const data = await r.json();
+      clearInterval(tick);
+      rows.forEach(r => r.classList.remove('active'));
+      showResults(data);
+      animateCount(killCount + 1);
+    } catch(e) {
+      clearInterval(tick);
+      alert('Connection error. Please try again.');
     }
-  } catch(e) {
-    grid.innerHTML = '<p style="color:#f00">Error. Try again.</p>';
-  }
-}
 
-async function joinWaitlist() {
-  const email = document.getElementById('waitlist-email').value.trim();
-  if (!email || !email.includes('@')) { alert('Enter a valid email'); return; }
-  const btn = document.getElementById('waitlist-btn');
-  btn.disabled = true;
-  btn.textContent = '...';
-  try {
-    const res = await fetch('/api/waitlist', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email })
-    });
-    const data = await res.json();
-    document.getElementById('waitlist-form').innerHTML =
-      `<p style="color:#22c55e;font-weight:700;font-size:16px;">✓ You're #${data.position} on the waitlist!</p>`;
-  } catch(e) {
-    btn.disabled = false;
-    btn.textContent = 'Notify me';
-    alert('Error. Try again.');
+    document.getElementById('loading').style.display = 'none';
+    document.querySelector('.btn-kill').disabled = false;
+    document.querySelector('.btn-kill').textContent = '💀 Kill My Idea';
   }
-}
+
+  function showResults(data) {
+    document.getElementById('cert-idea').textContent = data.idea;
+    const body = data.summary
+      .replace(/(MAIN CAUSE OF DEATH:|TIME TO DEATH:|TIME OF DEATH:|CAUSE #\d:|FOUNDER'S LAST WORDS:|AUTOPSY NOTES:)/g,
+        m => `\n<strong>${m}</strong>`);
+    document.getElementById('cert-body').innerHTML = body;
+
+    const grid = document.getElementById('agents-grid');
+    grid.innerHTML = '';
+    data.agents.forEach(a => {
+      const parts = a.verdict.split(/VERDICT:/);
+      grid.innerHTML += `
+        <div class="agent-card">
+          <div class="agent-name">${a.agent}</div>
+          <div class="agent-text">
+            ${parts[0].trim()}
+            ${parts[1] ? `<span class="agent-verdict">VERDICT: ${parts[1].trim()}</span>` : ''}
+          </div>
+        </div>`;
+    });
+
+    document.getElementById('res-banner').style.display = 'block';
+    document.getElementById('res-results').style.display = 'none';
+    document.getElementById('results').style.display = 'block';
+    document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  function shareTwitter() {
+    const t = `I fed "${currentIdea}" to an AI that destroys startup ideas.\n\nIt got absolutely demolished 💀\n\nFree brutal feedback:`;
+    window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(t) + '&url=' + encodeURIComponent('https://startupdeath.onrender.com'));
+  }
+
+  function shareLinkedIn() {
+    window.open('https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent('https://startupdeath.onrender.com'));
+  }
+
+  function copyResult() {
+    navigator.clipboard.writeText(`My startup idea "${currentIdea}" was destroyed by AI 💀\nhttps://startupdeath.onrender.com`);
+    alert('Copied!');
+  }
+
+  function tryAgain() {
+    document.getElementById('results').style.display = 'none';
+    document.getElementById('idea').value = '';
+    document.getElementById('desc').value = '';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function goPro() { window.location.href = '/pricing'; }
+
+  async function resurrect() {
+    window.location.href = '/pricing';
+  }
 </script>
 </body>
 </html>

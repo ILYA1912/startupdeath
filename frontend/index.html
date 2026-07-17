@@ -507,6 +507,50 @@
     .res-card .agent-name { color: #c88820; }
     .res-fix { color: #4ade80; font-weight: 600; margin-top: 10px; display: block; font-size: 14px; }
 
+    /* Survival Score */
+    .score-block {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      margin: 24px 0;
+      flex-wrap: wrap;
+    }
+    .score-circle {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 3px solid rgba(230,48,48,0.5);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(230,48,48,0.05);
+    }
+    .score-number { font-size: 32px; font-weight: 900; color: var(--red); line-height: 1; }
+    .score-label { font-size: 9px; font-weight: 700; letter-spacing: 1.5px; color: var(--muted); text-transform: uppercase; margin-top: 2px; }
+    .score-text { text-align: left; max-width: 240px; }
+    .score-text strong { color: #ccc; font-size: 14px; display: block; margin-bottom: 4px; }
+    .score-text span { color: var(--muted2); font-size: 13px; line-height: 1.5; }
+
+    /* Graveyard entry */
+    .graveyard-entry {
+      background: rgba(230,48,48,0.04);
+      border: 1px solid rgba(230,48,48,0.15);
+      border-radius: 12px;
+      padding: 14px 18px;
+      margin: 16px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .graveyard-entry p { font-size: 13px; color: var(--muted2); }
+    .graveyard-entry p strong { color: #ccc; }
+    .graveyard-link { font-size: 12px; font-weight: 700; color: var(--red); text-decoration: none; white-space: nowrap; }
+    .graveyard-link:hover { text-decoration: underline; }
+
     /* Footer */
     footer {
       border-top: 1px solid var(--border);
@@ -548,6 +592,7 @@
     <div class="stat"><span class="stat-n" id="kill-count">0</span><span class="stat-l">ideas killed</span></div>
     <div class="stat"><span class="stat-n">6</span><span class="stat-l">AI killers</span></div>
     <div class="stat"><span class="stat-n">30s</span><span class="stat-l">time to death</span></div>
+    <div class="stat"><a href="/graveyard" style="text-decoration:none"><span class="stat-n" style="color:var(--red)">☠️</span><span class="stat-l" style="color:var(--red)">graveyard</span></a></div>
   </div>
 </section>
 
@@ -625,7 +670,21 @@
         <span>☠️</span>
       </div>
       <p class="cert-idea" id="cert-idea"></p>
+      <div id="score-block" class="score-block" style="display:none">
+        <div class="score-circle">
+          <span class="score-number" id="score-number">—</span>
+          <span class="score-label">/ 100</span>
+        </div>
+        <div class="score-text">
+          <strong id="score-headline">Survival Score</strong>
+          <span id="score-desc">Lower = closer to death</span>
+        </div>
+      </div>
       <div class="cert-body" id="cert-body"></div>
+      <div id="graveyard-entry" class="graveyard-entry" style="display:none">
+        <p>Your idea is <strong id="graveyard-rank">#—</strong> in the graveyard · Category: <strong id="graveyard-cat">—</strong></p>
+        <a href="/graveyard" class="graveyard-link">Browse the graveyard →</a>
+      </div>
       <div class="cert-share">
         <button class="share-btn" onclick="shareTwitter()">🐦 Share on X</button>
         <button class="share-btn" onclick="shareLinkedIn()">💼 LinkedIn</button>
@@ -664,7 +723,7 @@
 </div>
 
 <footer>
-  <p>StartupDeath · <a href="/examples">See examples</a> · <a href="/pricing">Pricing</a> · <a href="https://github.com/ILYA1912/startupdeath" target="_blank">GitHub</a></p>
+  <p>StartupDeath · <a href="/graveyard">Graveyard</a> · <a href="/pricing">Pricing</a> · <a href="https://github.com/ILYA1912/startupdeath" target="_blank">GitHub</a></p>
   <p style="margin-top:6px">Better to know now than after spending your savings.</p>
 </footer>
 
@@ -732,9 +791,41 @@
     document.querySelector('.btn-kill').textContent = '💀 Kill My Idea';
   }
 
+  function scoreHeadline(s) {
+    if (s <= 10) return ['Clinically Dead', 'No pulse detected. Do not attempt resuscitation.'];
+    if (s <= 20) return ['Fatal Diagnosis', 'Multiple organ failures. Prognosis: terminal.'];
+    if (s <= 35) return ['Critical Condition', 'Survival unlikely without radical surgery.'];
+    if (s <= 50) return ['Serious Injuries', 'Fighting chance — if you pivot fast.'];
+    if (s <= 70) return ['Wounded but Alive', 'Fixable. Most flaws have solutions.'];
+    return ['Surprisingly Viable', 'Rare — but still needs execution to survive.'];
+  }
+
   function showResults(data) {
     document.getElementById('cert-idea').textContent = data.idea;
-    const body = data.summary
+
+    // Survival Score
+    if (data.survival_score !== undefined) {
+      const score = data.survival_score;
+      document.getElementById('score-number').textContent = score;
+      const [headline, desc] = scoreHeadline(score);
+      document.getElementById('score-headline').textContent = headline;
+      document.getElementById('score-desc').textContent = desc;
+      document.getElementById('score-block').style.display = 'flex';
+    }
+
+    // Graveyard entry
+    if (data.graveyard_id) {
+      document.getElementById('graveyard-rank').textContent = '#' + data.graveyard_id;
+      document.getElementById('graveyard-cat').textContent = data.category || 'Other';
+      document.getElementById('graveyard-entry').style.display = 'flex';
+    }
+
+    // Strip score/category fields from displayed summary
+    const cleaned = data.summary
+      .replace(/^SURVIVAL SCORE:.*$/m, '')
+      .replace(/^CATEGORY:.*$/m, '')
+      .trim();
+    const body = cleaned
       .replace(/(MAIN CAUSE OF DEATH:|TIME TO DEATH:|TIME OF DEATH:|CAUSE #\d:|FOUNDER'S LAST WORDS:|AUTOPSY NOTES:)/g,
         m => `\n<strong>${m}</strong>`);
     document.getElementById('cert-body').innerHTML = body;

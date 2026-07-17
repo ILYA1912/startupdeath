@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>The Startup Graveyard — StartupDeath</title>
+  <meta name="description" content="Every startup idea that has ever died here. Real data on why ideas fail."/>
+  <meta property="og:title" content="The Startup Graveyard — Real data on why startups die"/>
+  <meta property="og:description" content="Browse thousands of killed startup ideas. See patterns. Avoid their mistakes."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --red: #e63030; --orange: #e8720c;
+      --bg: #0a0a0a; --bg2: #111; --border: #1f1f1f;
+      --text: #e8e8e8; --muted: #5a5a5a; --muted2: #888;
+    }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+
+    .top-bar { display: flex; align-items: center; justify-content: space-between; padding: 20px 32px; border-bottom: 1px solid var(--border); }
+    .logo { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 900; color: var(--red); text-decoration: none; }
+    .btn-kill-link { background: linear-gradient(135deg, var(--red), var(--orange)); border: none; border-radius: 8px; padding: 9px 20px; color: #fff; font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; text-decoration: none; }
+
+    .hero { max-width: 800px; margin: 0 auto; padding: 64px 24px 48px; text-align: center; }
+    .eyebrow { display: inline-block; background: rgba(230,48,48,0.08); border: 1px solid rgba(230,48,48,0.2); color: #e06060; font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 5px 14px; border-radius: 100px; margin-bottom: 24px; }
+    .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(32px, 5vw, 52px); font-weight: 900; line-height: 1.1; margin-bottom: 16px; }
+    .hero h1 em { font-style: normal; background: linear-gradient(135deg, var(--red), var(--orange)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero-sub { color: var(--muted2); font-size: 17px; line-height: 1.6; max-width: 520px; margin: 0 auto 48px; }
+
+    .stats-row { display: flex; justify-content: center; gap: 48px; flex-wrap: wrap; margin-bottom: 64px; }
+    .big-stat { text-align: center; }
+    .big-n { font-size: 48px; font-weight: 900; color: #fff; display: block; line-height: 1; }
+    .big-n.red { color: var(--red); }
+    .big-l { font-size: 12px; color: var(--muted); margin-top: 6px; letter-spacing: 0.5px; text-transform: uppercase; }
+
+    .content { max-width: 1100px; margin: 0 auto; padding: 0 24px 80px; }
+
+    .section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--muted); margin-bottom: 20px; }
+
+    /* Category bars */
+    .categories { margin-bottom: 56px; }
+    .cat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+    .cat-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; }
+    .cat-name { font-size: 14px; font-weight: 700; color: #ccc; margin-bottom: 8px; }
+    .cat-bar-wrap { height: 4px; background: #1a1a1a; border-radius: 2px; margin-bottom: 8px; }
+    .cat-bar { height: 4px; border-radius: 2px; background: linear-gradient(90deg, var(--red), var(--orange)); transition: width 1s ease; }
+    .cat-meta { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); }
+    .cat-score { color: var(--orange); font-weight: 600; }
+
+    /* Score gauge */
+    .score-section { margin-bottom: 56px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .insight-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 24px; }
+    .insight-label { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+    .insight-value { font-size: 36px; font-weight: 900; color: #fff; }
+    .insight-value .unit { font-size: 18px; color: var(--muted2); font-weight: 400; }
+    .insight-sub { font-size: 13px; color: var(--muted2); margin-top: 6px; line-height: 1.5; }
+    .score-bar-wrap { height: 8px; background: #1a1a1a; border-radius: 4px; margin-top: 16px; }
+    .score-bar { height: 8px; border-radius: 4px; background: linear-gradient(90deg, #22c55e 0%, #e8720c 50%, var(--red) 100%); }
+    .score-marker { width: 14px; height: 14px; border-radius: 50%; background: #fff; border: 2px solid var(--bg); margin-top: -11px; position: relative; transition: left 1s ease; }
+
+    /* Recent kills */
+    .recent { margin-bottom: 56px; }
+    .kills-list { display: flex; flex-direction: column; gap: 10px; }
+    .kill-row { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px; display: grid; grid-template-columns: 1fr auto auto auto; align-items: center; gap: 16px; transition: border-color 0.2s; }
+    .kill-row:hover { border-color: rgba(230,48,48,0.25); }
+    .kill-idea { font-size: 14px; font-weight: 600; color: #ddd; }
+    .kill-cause { font-size: 12px; color: var(--muted2); margin-top: 3px; }
+    .kill-cat { font-size: 11px; font-weight: 600; background: #1a1a1a; border: 1px solid #252525; border-radius: 6px; padding: 3px 10px; color: var(--muted2); white-space: nowrap; }
+    .kill-score { font-size: 18px; font-weight: 800; text-align: right; }
+    .kill-score.low { color: var(--red); }
+    .kill-score.mid { color: var(--orange); }
+    .kill-score.high { color: #22c55e; }
+    .kill-date { font-size: 11px; color: var(--muted); white-space: nowrap; }
+
+    .empty { text-align: center; padding: 60px 24px; color: var(--muted); }
+    .empty h3 { font-size: 18px; color: #333; margin-bottom: 8px; }
+
+    .cta-section { text-align: center; margin-top: 64px; padding: 48px 24px; background: var(--bg2); border: 1px solid var(--border); border-radius: 20px; }
+    .cta-section h2 { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 900; margin-bottom: 12px; }
+    .cta-section p { color: var(--muted2); font-size: 15px; margin-bottom: 28px; }
+    .btn-cta { display: inline-block; background: linear-gradient(135deg, var(--red), var(--orange)); border: none; border-radius: 12px; padding: 16px 36px; color: #fff; font-size: 16px; font-weight: 800; cursor: pointer; font-family: 'Inter', sans-serif; text-decoration: none; transition: opacity 0.2s; }
+    .btn-cta:hover { opacity: 0.88; }
+
+    footer { border-top: 1px solid var(--border); padding: 24px; text-align: center; color: var(--muted); font-size: 13px; }
+    footer a { color: #444; text-decoration: none; }
+    footer a:hover { color: var(--red); }
+
+    @media (max-width: 640px) {
+      .score-section { grid-template-columns: 1fr; }
+      .kill-row { grid-template-columns: 1fr auto; }
+      .kill-cat, .kill-date { display: none; }
+      .stats-row { gap: 28px; }
+      .top-bar { padding: 16px 20px; }
+    }
+
+    .loading-placeholder { height: 200px; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 14px; }
+  </style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a href="/" class="logo">💀 StartupDeath</a>
+  <a href="/" class="btn-kill-link">Kill My Idea →</a>
+</div>
+
+<section class="hero">
+  <div class="eyebrow">Real data · Updated live</div>
+  <h1>The Startup<br><em>Graveyard</em></h1>
+  <p class="hero-sub">Every idea that died here. Real patterns, real reasons. What ChatGPT can't tell you.</p>
+  <div class="stats-row">
+    <div class="big-stat">
+      <span class="big-n red" id="total-count">—</span>
+      <span class="big-l">ideas killed</span>
+    </div>
+    <div class="big-stat">
+      <span class="big-n" id="avg-score-big">—</span>
+      <span class="big-l">avg survival score</span>
+    </div>
+    <div class="big-stat">
+      <span class="big-n" id="cat-count">—</span>
+      <span class="big-l">categories tracked</span>
+    </div>
+  </div>
+</section>
+
+<div class="content">
+
+  <!-- Score insight -->
+  <div class="score-section" id="score-section" style="display:none">
+    <div class="insight-card">
+      <div class="insight-label">Average Survival Score</div>
+      <div class="insight-value"><span id="avg-score-val">—</span><span class="unit"> / 100</span></div>
+      <p class="insight-sub" id="score-insight">Most startup ideas score between 10–35. Anything above 50 is rare.</p>
+      <div class="score-bar-wrap">
+        <div class="score-bar"></div>
+        <div class="score-marker" id="score-marker" style="left:25%"></div>
+      </div>
+    </div>
+    <div class="insight-card">
+      <div class="insight-label">What kills most ideas</div>
+      <div id="top-killer" style="margin-top:8px">
+        <div style="font-size:28px;font-weight:900;color:var(--red);margin-bottom:8px" id="top-cat">—</div>
+        <p class="insight-sub">This category has the most casualties in the graveyard.</p>
+        <div style="margin-top:16px;font-size:13px;color:var(--muted2)" id="top-cat-detail"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Categories -->
+  <div class="categories" id="categories-section" style="display:none">
+    <p class="section-title">Death by category</p>
+    <div class="cat-grid" id="cat-grid"></div>
+  </div>
+
+  <!-- Recent kills -->
+  <div class="recent">
+    <p class="section-title">Recently killed</p>
+    <div class="kills-list" id="kills-list">
+      <div class="loading-placeholder">Loading graveyard data...</div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-section">
+    <h2>Is your idea next?</h2>
+    <p>Find out before you spend months building it. 30 seconds. Free. Brutally honest.</p>
+    <a href="/" class="btn-cta">💀 Kill My Idea</a>
+  </div>
+
+</div>
+
+<footer>
+  <p>StartupDeath · <a href="/">Home</a> · <a href="/pricing">Pricing</a> · <a href="/graveyard">Graveyard</a></p>
+  <p style="margin-top:6px">Better to know now than after spending your savings.</p>
+</footer>
+
+<script>
+  function scoreColor(s) {
+    if (s <= 30) return 'low';
+    if (s <= 55) return 'mid';
+    return 'high';
+  }
+
+  function timeAgo(dateStr) {
+    const d = new Date(dateStr);
+    const now = new Date();
+    const days = Math.floor((now - d) / 86400000);
+    if (days === 0) return 'Today';
+    if (days === 1) return 'Yesterday';
+    if (days < 7) return `${days}d ago`;
+    if (days < 30) return `${Math.floor(days/7)}w ago`;
+    return `${Math.floor(days/30)}mo ago`;
+  }
+
+  async function loadGraveyard() {
+    try {
+      const r = await fetch('/api/graveyard');
+      const d = await r.json();
+
+      // Big stats
+      document.getElementById('total-count').textContent = d.total || 0;
+      document.getElementById('avg-score-big').textContent = d.avg_score ? d.avg_score + '/100' : '—';
+      document.getElementById('cat-count').textContent = Object.keys(d.categories || {}).length || 0;
+
+      if (d.total === 0) {
+        document.getElementById('kills-list').innerHTML = `
+          <div class="empty">
+            <h3>The graveyard is empty... for now.</h3>
+            <p>Be the first to kill an idea.</p>
+          </div>`;
+        return;
+      }
+
+      // Score section
+      document.getElementById('score-section').style.display = 'grid';
+      document.getElementById('avg-score-val').textContent = d.avg_score;
+      const pct = (d.avg_score / 100) * 100;
+      document.getElementById('score-marker').style.marginLeft = `calc(${pct}% - 7px)`;
+
+      // Top category
+      const cats = d.categories || {};
+      const topCat = Object.entries(cats).sort((a,b) => b[1]-a[1])[0];
+      if (topCat) {
+        document.getElementById('top-cat').textContent = topCat[0];
+        document.getElementById('top-cat-detail').textContent =
+          `${topCat[1]} ideas killed in ${topCat[0]}. Avg survival: ${d.category_avg_scores?.[topCat[0]] || '—'}/100`;
+      }
+
+      // Categories
+      if (Object.keys(cats).length > 0) {
+        document.getElementById('categories-section').style.display = 'block';
+        const maxCount = Math.max(...Object.values(cats));
+        const grid = document.getElementById('cat-grid');
+        const sorted = Object.entries(cats).sort((a,b) => b[1]-a[1]);
+        grid.innerHTML = sorted.map(([name, count]) => {
+          const pct = Math.round((count / maxCount) * 100);
+          const avgScore = d.category_avg_scores?.[name] || 0;
+          return `
+            <div class="cat-card">
+              <div class="cat-name">${name}</div>
+              <div class="cat-bar-wrap"><div class="cat-bar" style="width:${pct}%"></div></div>
+              <div class="cat-meta">
+                <span>${count} killed</span>
+                <span class="cat-score">${avgScore}/100 avg</span>
+              </div>
+            </div>`;
+        }).join('');
+      }
+
+      // Recent kills
+      const list = document.getElementById('kills-list');
+      if (!d.recent || d.recent.length === 0) {
+        list.innerHTML = '<div class="empty"><h3>No kills yet</h3></div>';
+        return;
+      }
+      list.innerHTML = d.recent.map(s => `
+        <div class="kill-row">
+          <div>
+            <div class="kill-idea">💀 ${s.idea_preview}</div>
+            <div class="kill-cause">${s.cause_of_death}</div>
+          </div>
+          <span class="kill-cat">${s.category}</span>
+          <div class="kill-score ${scoreColor(s.survival_score)}">${s.survival_score}<small style="font-size:11px;font-weight:400;color:var(--muted)">/100</small></div>
+          <span class="kill-date">${timeAgo(s.killed_at)}</span>
+        </div>`).join('');
+
+    } catch(e) {
+      document.getElementById('kills-list').innerHTML =
+        '<div class="empty"><h3>Failed to load graveyard</h3><p>Try refreshing the page.</p></div>';
+    }
+  }
+
+  loadGraveyard();
+</script>
+</body>
+</html>

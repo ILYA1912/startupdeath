@@ -1,6 +1,8 @@
 import os
 import asyncio
 import json
+import re
+from datetime import date
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -15,6 +17,8 @@ app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], all
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 COUNTER_FILE = "kill_count.json"
+WAITLIST_FILE = "waitlist.json"
+GRAVEYARD_FILE = "graveyard.json"
 
 def get_kill_count():
     try:
@@ -28,6 +32,44 @@ def increment_kill_count():
     with open(COUNTER_FILE, "w") as f:
         json.dump({"total": count}, f)
     return count
+
+def load_graveyard():
+    try:
+        with open(GRAVEYARD_FILE) as f:
+            return json.load(f)
+    except:
+        return {"startups": []}
+
+def save_to_graveyard(idea: str, category: str, survival_score: int, cause_of_death: str, time_to_death: str):
+    data = load_graveyard()
+    entry = {
+        "id": len(data["startups"]) + 1,
+        "idea_preview": idea[:60] + ("..." if len(idea) > 60 else ""),
+        "category": category,
+        "survival_score": survival_score,
+        "cause_of_death": cause_of_death,
+        "time_to_death": time_to_death,
+        "killed_at": str(date.today())
+    }
+    data["startups"].append(entry)
+    with open(GRAVEYARD_FILE, "w") as f:
+        json.dump(data, f, indent=2)
+    return entry
+
+def load_waitlist():
+    try:
+        with open(WAITLIST_FILE) as f:
+            return json.load(f)
+    except:
+        return []
+
+def save_email(email: str):
+    waitlist = load_waitlist()
+    if email not in waitlist:
+        waitlist.append(email)
+        with open(WAITLIST_FILE, "w") as f:
+            json.dump(waitlist, f)
+    return len(waitlist)
 
 AGENTS = [
     {
@@ -91,23 +133,17 @@ class StartupRequest(BaseModel):
 class EmailRequest(BaseModel):
     email: str
 
-# Simple in-memory waitlist (persisted to file)
-WAITLIST_FILE = "waitlist.json"
-
-def load_waitlist():
-    try:
-        with open(WAITLIST_FILE) as f:
-            return json.load(f)
-    except:
-        return []
-
-def save_email(email: str):
-    waitlist = load_waitlist()
-    if email not in waitlist:
-        waitlist.append(email)
-        with open(WAITLIST_FILE, "w") as f:
-            json.dump(waitlist, f)
-    return len(waitlist)
+def parse_summary_fields(text: str):
+    score_match = re.search(r'SURVIVAL SCORE:\s*(\d+)', text, re.IGNORECASE)
+    category_match = re.search(r'CATEGORY:\s*([^\n]+)', text, re.IGNORECASE)
+    cause_match = re.search(r'MAIN CAUSE OF DEATH:\s*([^\n]+)', text, re.IGNORECASE)
+    time_match = re.search(r'TIME TO DEATH:\s*([^\n]+)', text, re.IGNORECASE)
+    return {
+        "survival_score": min(100, max(0, int(score_match.group(1)))) if score_match else 25,
+        "category": category_match.group(1).strip().split("/")[0].strip() if category_match else "Other",
+        "cause_of_death": cause_match.group(1).strip() if cause_match else "Multiple fatal flaws",
+        "time_to_death": time_match.group(1).strip() if time_match else "12 months"
+    }
 
 def run_agent_sync(agent: dict, idea: str, description: str) -> dict:
     prompt = f"""Startup idea: {idea}
@@ -132,6 +168,33 @@ async def run_agent(agent: dict, idea: str, description: str) -> dict:
 async def get_stats():
     return {"total": get_kill_count(), "waitlist": len(load_waitlist())}
 
+@app.get("/api/graveyard")
+async def get_graveyard():
+    data = load_graveyard()
+    startups = data["startups"]
+
+    if not startups:
+        return {"total": 0, "avg_score": 0, "categories": {}, "category_avg_scores": {}, "recent": []}
+
+    categories = {}
+    cat_scores = {}
+    for s in startups:
+        cat = s.get("category", "Other")
+        categories[cat] = categories.get(cat, 0) + 1
+        cat_scores.setdefault(cat, []).append(s.get("survival_score", 25))
+
+    scores = [s.get("survival_score", 25) for s in startups]
+    avg_score = round(sum(scores) / len(scores), 1)
+    cat_avg = {cat: round(sum(v) / len(v), 1) for cat, v in cat_scores.items()}
+
+    return {
+        "total": len(startups),
+        "avg_score": avg_score,
+        "categories": categories,
+        "category_avg_scores": cat_avg,
+        "recent": list(reversed(startups[-30:]))
+    }
+
 @app.post("/api/waitlist")
 async def join_waitlist(req: EmailRequest):
     count = save_email(req.email)
@@ -144,23 +207,28 @@ async def analyze(request: StartupRequest):
 
     summary_prompt = f"""Startup idea: "{request.idea}"
 
-Six brutal experts just destroyed this startup. Write a dramatic Certificate of Death:
+Six brutal experts just destroyed this startup. Write a Certificate of Death using EXACTLY this format:
 
-MAIN CAUSE OF DEATH: (one savage sentence — the #1 fatal flaw)
-TIME TO DEATH: X months (be specific, 2-18 months)
-CAUSE #2: (second killer)
-CAUSE #3: (third killer)
-FOUNDER'S LAST WORDS: "..." (darkly funny quote the founder would actually say)
-AUTOPSY NOTES: (one sentence of dark humor)
+SURVIVAL SCORE: [single number 0-100, where 0=dead on arrival, 100=unicorn. Most ideas score 10-40]
+CATEGORY: [pick exactly one: SaaS / Marketplace / Consumer App / EdTech / FinTech / HealthTech / E-commerce / Media / Hardware / Other]
+MAIN CAUSE OF DEATH: [one savage sentence — the #1 fatal flaw]
+TIME TO DEATH: [X months, be specific, range 2-18]
+CAUSE #2: [second killer]
+CAUSE #3: [third killer]
+FOUNDER'S LAST WORDS: "[darkly funny quote the founder would actually say]"
+AUTOPSY NOTES: [one sentence of dark humor]
 
 Be brutal, specific, and memorable. No generic statements."""
 
     loop = asyncio.get_event_loop()
     summary_msg = await loop.run_in_executor(None, lambda: client.chat.completions.create(
         model="llama-3.3-70b-versatile",
-        max_tokens=300,
+        max_tokens=350,
         messages=[{"role": "user", "content": summary_prompt}]
     ))
+
+    summary_text = summary_msg.choices[0].message.content
+    parsed = parse_summary_fields(summary_text)
 
     resurrection_results = None
     if request.resurrection:
@@ -168,11 +236,21 @@ Be brutal, specific, and memorable. No generic statements."""
         resurrection_results = list(await asyncio.gather(*res_tasks))
 
     increment_kill_count()
+    graveyard_entry = save_to_graveyard(
+        request.idea,
+        parsed["category"],
+        parsed["survival_score"],
+        parsed["cause_of_death"],
+        parsed["time_to_death"]
+    )
 
     return {
         "idea": request.idea,
         "agents": list(results),
-        "summary": summary_msg.choices[0].message.content,
+        "summary": summary_text,
+        "survival_score": parsed["survival_score"],
+        "category": parsed["category"],
+        "graveyard_id": graveyard_entry["id"],
         "resurrection": resurrection_results
     }
 

@@ -214,16 +214,8 @@
       } catch(e) {}
 
       // Redirect to Stripe (replace with real link when ready)
-      const stripeLink = window.STRIPE_LINK || null;
-      if (stripeLink) {
-        window.location.href = stripeLink + '?prefilled_email=' + encodeURIComponent(email);
-      } else {
-        btn.disabled = false;
-        btn.textContent = 'Get Pro — $9/month';
-        document.getElementById('waitlist-success').style.display = 'block';
-        document.getElementById('waitlist-success').textContent =
-          '✓ Got it! We\'ll email ' + email + ' when Pro launches (within 48h).';
-      }
+      const gumroadLink = 'https://innovator825.gumroad.com/l/startupdeath-pro';
+      window.location.href = gumroadLink + '?wanted=true&email=' + encodeURIComponent(email);
     }
   </script>
 </body>

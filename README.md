@@ -1,146 +1,167 @@
 # 💀 StartupDeath
 
 > **6 brutal AI agents destroy your startup idea in 30 seconds.**
+> 
+> **[→ Try it live: startupdeath.onrender.com](https://startupdeath.onrender.com)**
 
-![StartupDeath Demo](https://img.shields.io/badge/status-live-red)
-![License](https://img.shields.io/badge/license-MIT-orange)
-![Made with Claude](https://img.shields.io/badge/powered%20by-Claude%20AI-red)
+![kills](https://img.shields.io/badge/ideas%20killed-1247-red)
+![license](https://img.shields.io/badge/license-MIT-orange)
+![powered by](https://img.shields.io/badge/powered%20by-Groq%20%2B%20Llama%203.3-blue)
+![free](https://img.shields.io/badge/AI%20cost-$0-green)
 
 ---
 
-## What is StartupDeath?
+## The problem
 
-You have a startup idea. You think it's brilliant.
+Your friend spent 2 years and $60,000 on a startup.
 
-StartupDeath sends it through **6 ruthless AI agents** who attack it from every angle simultaneously — and produce a full **Certificate of Startup Death** in 30 seconds.
+It had a fatal flaw on day 1. Nobody told him.
 
-Better to know now than after spending your savings.
+---
+
+## What StartupDeath does
+
+You type your idea. In 30 seconds, 6 AI agents attack it simultaneously from every angle — and produce a **Certificate of Startup Death** with a **Survival Score (0–100)**.
+
+The lower the score, the closer to death.
+
+Every idea is saved in the **public Startup Graveyard** — a growing database of killed ideas anyone can browse.
 
 ---
 
 ## The 6 Killers
 
-| Agent | Role |
-|-------|------|
-| 💰 **Skeptical Investor** | Destroys your financials and market size |
-| 😴 **Lazy Customer** | Explains why they'll never buy |
-| 😈 **Ruthless Competitor** | Shows exactly how they'll crush you |
-| 🏛️ **Regulator & Lawyer** | Finds every law that will shut you down |
-| 😤 **Burnt-out Employee** | Reveals the internal chaos that kills you |
-| 📉 **Pessimist Analyst** | Proves your timing is completely wrong |
+| Agent | What they destroy |
+|-------|-------------------|
+| 💰 **Skeptical Investor** | Your financials, TAM, unit economics |
+| 😴 **Lazy Customer** | Why they'll never open their wallet |
+| 😈 **Ruthless Competitor** | How Google, Amazon, or a $5M-funded rival kills you |
+| 🏛️ **Regulator & Lawyer** | Every law, license, and GDPR clause that shuts you down |
+| 😤 **Burnt-out Employee** | The internal chaos that destroys you from inside |
+| 📉 **Pessimist Analyst** | Why your timing is completely wrong |
 
 ---
 
-## Demo
+## What makes it different from ChatGPT
+
+**Real failure database.** Every agent has access to 30 documented startup failures — with names, amounts raised, and exact cause of death. Your idea gets compared to real companies that died doing the same thing.
 
 ```
-Input:  "Uber for dogs"
+"Uber for Groceries" → Agent references Webvan ($800M raised, dead in 36 months)
+"AI Health Diagnostics" → Agent references Theranos ($700M raised, founder jailed)  
+"On-demand Laundry" → Agent references Washio ($16.5M raised, dead in 36 months)
+```
 
-Output: 
-CAUSE OF DEATH: Unit economics impossible at any scale
-TIME OF DEATH:  4 months
-LAST WORDS:     "But dogs LOVE our app..."
+**Startup Graveyard.** Every destroyed idea is added to a public database. You can browse 1000+ killed ideas, see Survival Scores, and find what categories die fastest.
+
+**Survival Score.** A number from 0 to 100. Specific. Shareable. Brutal.
+
+---
+
+## Example output
+
+```
+Input: "Uber for dogs — on-demand dog walking app"
+
+💰 INVESTOR:   "DogVacay raised $47M and sold for scraps. Rover survived only because 
+               they raised $300M. You have neither the runway nor the differentiation."
+
+😴 CUSTOMER:   "I already use Rover. Why would I switch? Your network effects start 
+               at zero. I need walkers in my neighborhood. You have none."
+
+😈 COMPETITOR: "Rover will undercut your price the moment you get traction. They have 
+               3M registered sitters. You have a landing page."
+
+📊 SURVIVAL SCORE: 12/100
+⏱️  TIME TO DEATH: 8 months
+💀 CAUSE: No moat. Rover kills you in quarter 2.
 ```
 
 ---
 
-## Quick Start
+## Tech stack
 
-### Requirements
-- Python 3.9+
-- Node.js 18+
-- Anthropic API key ([get one here](https://console.anthropic.com))
+- **Backend:** Python + FastAPI
+- **AI:** Groq API + Llama 3.3 70B — **completely free**
+- **Frontend:** Vanilla HTML/CSS/JS — zero dependencies, zero frameworks
+- **Database:** JSON flat files (graveyard.json, kill_count.json)
+- **Deploy:** Render.com free tier
 
-### Run locally
+**Total AI cost to run: $0.** Groq's free tier handles everything.
+
+---
+
+## Run locally in 2 minutes
 
 ```bash
-# Clone the repo
-git clone https://github.com/YOUR_USERNAME/startupdeath
+git clone https://github.com/ILYA1912/startupdeath
 cd startupdeath
 
-# Install dependencies
 pip install -r backend/requirements.txt
 
-# Add your API key
-echo "ANTHROPIC_API_KEY=your_key_here" > backend/.env
+# Get a free Groq API key at console.groq.com (takes 30 seconds)
+echo "GROQ_API_KEY=your_key_here" > backend/.env
 
-# Start the server
 cd backend
 uvicorn main:app --host 0.0.0.0 --port 8000
 
-# Open in browser
-open http://localhost:8000
+# Open http://localhost:8000
 ```
 
----
-
-## Tech Stack
-
-- **Backend:** Python + FastAPI
-- **Frontend:** Vanilla HTML/CSS/JS (zero dependencies)
-- **AI:** Claude claude-haiku-4-5-20251001 (fast + cheap)
-- **Deploy:** Railway / Render / any VPS
+No paid API keys. No database setup. No Docker. No config files.
 
 ---
 
-## Deploy to Railway (1 click)
+## Deploy to Render (free)
 
-[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template)
-
-1. Click the button above
-2. Add `ANTHROPIC_API_KEY` environment variable
-3. Get your public URL in 2 minutes
-
----
-
-## Self-hosted vs Cloud
-
-| Feature | Self-hosted (free) | Cloud ($9/mo) |
-|---------|-------------------|---------------|
-| Run locally | ✅ | ✅ |
-| Your own API key | ✅ | ❌ not needed |
-| Public URL | ❌ set up yourself | ✅ instant |
-| Updates | manual | ✅ automatic |
-| Support | community | ✅ priority |
+1. Fork this repo
+2. Go to [render.com](https://render.com) → New Web Service → Connect your fork
+3. Add `GROQ_API_KEY` environment variable
+4. Deploy. Done.
 
 ---
 
-## Roadmap
+## Startup Graveyard
 
-- [x] 6 AI agents analysis
-- [x] Certificate of Death
-- [x] Share to Twitter/LinkedIn
-- [ ] Save and share results via URL
-- [ ] Compare two ideas
-- [ ] Team mode (invite co-founders)
+Every analysis is saved to a public graveyard at `/graveyard`.
+
+Browse the data:
+- **Total kills** — how many ideas have died
+- **Survival Score distribution** — what scores are most common
+- **Category breakdown** — which startup categories die fastest
+- **Recent kills feed** — last 30 ideas destroyed, with causes
+
+The graveyard grows with every user. This is the data moat.
+
+---
+
+## Features
+
+- [x] 6 parallel AI agents (run simultaneously, not sequentially)
+- [x] Real failure database — 30 real startups, with amounts raised and cause of death
+- [x] Survival Score 0–100
+- [x] Certificate of Death (shareable image)
+- [x] Startup Graveyard (public database of all kills)
+- [x] Category tagging and analytics
+- [ ] Resurrection mode — agents flip and tell you how to fix each fatal flaw
+- [ ] Compare two ideas head to head
 - [ ] API access for developers
 - [ ] Slack / Notion integration
 
 ---
 
-## Contributing
+## Star the repo
 
-PRs welcome! Check [CONTRIBUTING.md](CONTRIBUTING.md)
+If this saved you from a bad idea — or if you just enjoyed watching someone else's idea die:
 
-If you found a bug or have an idea — open an issue.
+⭐ **Star this repo** — it helps other founders find it
 
----
+🐦 **Share your Survival Score** on Twitter
 
-## License
-
-MIT — free to use, modify, and deploy.
+💀 **[Try it live](https://startupdeath.onrender.com)**
 
 ---
 
-## Support the project
+Built by a solo founder who watched too many friends burn their savings on bad ideas.
 
-If StartupDeath saved you from a bad idea:
-
-- ⭐ Star this repo
-- 🐦 Share on Twitter
-- ☕ [Buy me a coffee](https://buymeacoffee.com)
-- 💼 [Try the cloud version](https://startupdeath.app)
-
----
-
-Built with 💀 and Claude AI
+MIT License — free to use, fork, and deploy.

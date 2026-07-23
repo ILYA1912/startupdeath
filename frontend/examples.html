@@ -3,71 +3,122 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>StartupDeath — Hall of Fame 💀</title>
+  <title>StartupDeath — Hall of Fallen Startups</title>
+  <meta name="description" content="Real startup ideas that got destroyed by AI. Learn from their deaths before you repeat them."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet"/>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #080808; color: #e0e0e0; min-height: 100vh; padding: 60px 20px; }
-    h1 { text-align: center; font-size: 42px; font-weight: 900; background: linear-gradient(135deg, #ff3333, #ff8800); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 12px; }
-    .sub { text-align: center; color: #666; margin-bottom: 48px; font-size: 16px; }
-    .back { display: block; text-align: center; color: #ff3333; text-decoration: none; margin-bottom: 40px; font-size: 14px; }
-    .cards { max-width: 860px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 20px; }
-    .card { background: #111; border: 1px solid #1e1e1e; border-radius: 16px; padding: 28px; }
-    .card-idea { font-size: 20px; font-weight: 800; margin-bottom: 8px; }
-    .card-death { font-size: 13px; color: #ff8800; font-weight: 600; margin-bottom: 16px; }
-    .card-summary { font-size: 14px; color: #888; line-height: 1.8; border-left: 3px solid #ff3333; padding-left: 14px; }
-    .card-time { margin-top: 16px; font-size: 12px; color: #444; }
-    .try-btn { display: block; text-align: center; margin: 48px auto 0; background: linear-gradient(135deg, #ff3333, #ff8800); border: none; border-radius: 12px; padding: 16px 40px; color: #fff; font-size: 16px; font-weight: 700; cursor: pointer; text-decoration: none; width: fit-content; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --red: #e63030; --orange: #e8720c;
+      --bg: #0a0a0a; --bg2: #111; --border: #1f1f1f;
+      --text: #e8e8e8; --muted: #5a5a5a; --muted2: #888;
+    }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+
+    .top-bar { display: flex; align-items: center; justify-content: space-between; padding: 20px 32px; border-bottom: 1px solid var(--border); }
+    .logo { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 900; color: var(--red); text-decoration: none; }
+    .btn-kill-link { background: linear-gradient(135deg, var(--red), var(--orange)); border: none; border-radius: 8px; padding: 9px 20px; color: #fff; font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; text-decoration: none; }
+
+    .hero { max-width: 720px; margin: 0 auto; padding: 64px 24px 48px; text-align: center; }
+    .eyebrow { display: inline-block; background: rgba(230,48,48,0.08); border: 1px solid rgba(230,48,48,0.2); color: #e06060; font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 5px 14px; border-radius: 100px; margin-bottom: 24px; }
+    .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(30px, 5vw, 48px); font-weight: 900; line-height: 1.1; margin-bottom: 16px; }
+    .hero h1 em { font-style: normal; background: linear-gradient(135deg, var(--red), var(--orange)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero-sub { color: var(--muted2); font-size: 16px; line-height: 1.6; }
+
+    .cards { max-width: 960px; margin: 0 auto; padding: 0 24px 80px; display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 16px; }
+
+    .card { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 28px; transition: border-color 0.2s; }
+    .card:hover { border-color: rgba(230,48,48,0.25); }
+    .card-idea { font-size: 19px; font-weight: 800; color: #ddd; margin-bottom: 8px; }
+    .card-death { font-size: 12px; font-weight: 700; color: var(--orange); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
+    .card-summary { font-size: 14px; color: #777; line-height: 1.8; border-left: 3px solid rgba(230,48,48,0.4); padding-left: 14px; }
+    .card-time { margin-top: 16px; font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+    .score-badge { display: inline-block; background: rgba(230,48,48,0.1); border: 1px solid rgba(230,48,48,0.2); color: var(--red); font-size: 11px; font-weight: 700; padding: 2px 10px; border-radius: 20px; margin-left: auto; }
+
+    .cta { text-align: center; padding: 0 24px 80px; }
+    .btn-cta { display: inline-block; background: linear-gradient(135deg, var(--red), var(--orange)); border: none; border-radius: 12px; padding: 16px 40px; color: #fff; font-size: 16px; font-weight: 800; cursor: pointer; font-family: 'Inter', sans-serif; text-decoration: none; transition: opacity 0.2s; }
+    .btn-cta:hover { opacity: 0.88; }
+    .cta p { color: var(--muted2); font-size: 14px; margin-top: 12px; }
+
+    footer { border-top: 1px solid var(--border); padding: 24px; text-align: center; color: var(--muted); font-size: 13px; }
+    footer a { color: #444; text-decoration: none; }
+    footer a:hover { color: var(--red); }
+
+    @media (max-width: 640px) {
+      .cards { grid-template-columns: 1fr; }
+      .top-bar { padding: 16px 20px; }
+    }
   </style>
 </head>
 <body>
-  <h1>💀 Hall of Fallen Startups</h1>
-  <p class="sub">Real ideas. Real destruction. Learn from their deaths.</p>
-  <a href="/" class="back">← Kill your own idea</a>
 
-  <div class="cards">
-    <div class="card">
-      <div class="card-idea">🐕 Uber for Dogs</div>
-      <div class="card-death">CAUSE OF DEATH: Unit economics impossible at any scale</div>
-      <div class="card-summary">"The investor destroyed it in seconds — the average dog walk order is $15, drivers cost $12, insurance adds $8. You lose money on every single ride. There is no path to profitability, only a path to bankruptcy."</div>
-      <div class="card-time">💀 Died in: 4 months</div>
-    </div>
+<div class="top-bar">
+  <a href="/" class="logo">💀 StartupDeath</a>
+  <a href="/" class="btn-kill-link">Kill My Idea →</a>
+</div>
 
-    <div class="card">
-      <div class="card-idea">📚 Netflix for Books</div>
-      <div class="card-death">CAUSE OF DEATH: Amazon Kindle Unlimited already exists</div>
-      <div class="card-summary">"The competitor agent was brutal — Amazon launched Kindle Unlimited in 2014. It has 4 million books, 3 million subscribers, and loses money intentionally to kill exactly you. You have $50k. They have $500 billion."</div>
-      <div class="card-time">💀 Died in: 2 months</div>
-    </div>
+<section class="hero">
+  <div class="eyebrow">Real destructions · Real verdicts</div>
+  <h1>Hall of<br><em>Fallen Startups</em></h1>
+  <p class="hero-sub">Real ideas that got destroyed. Read them before you repeat them.</p>
+</section>
 
-    <div class="card">
-      <div class="card-idea">🤖 AI Lawyer</div>
-      <div class="card-death">CAUSE OF DEATH: Regulatory shutdown + liability</div>
-      <div class="card-summary">"The regulator killed it immediately — providing legal advice without a license is illegal in every US state. One wrong answer and you face a $250,000 fine and criminal charges. The Bar Association is already lobbying against AI legal tools."</div>
-      <div class="card-time">💀 Died in: 1 month</div>
-    </div>
+<div class="cards">
 
-    <div class="card">
-      <div class="card-idea">🏠 Airbnb for Offices</div>
-      <div class="card-death">CAUSE OF DEATH: WeWork tried this with $12B and still failed</div>
-      <div class="card-summary">"The pessimist analyst noted that post-COVID office occupancy is at 48% and declining. WeWork burned $12 billion proving this doesn't work. Remote work is permanent. Your timing is 5 years too late."</div>
-      <div class="card-time">💀 Died in: 6 months</div>
-    </div>
-
-    <div class="card">
-      <div class="card-idea">💊 Subscription Vitamins</div>
-      <div class="card-death">CAUSE OF DEATH: Customer churn kills subscription health businesses</div>
-      <div class="card-summary">"The lazy customer explained it perfectly — I subscribed to Care/of, Athletic Greens, and Ritual. I cancelled all three within 3 months. Vitamins are boring. I forget to take them. I don't see results. Nobody renews."</div>
-      <div class="card-time">💀 Died in: 8 months</div>
-    </div>
-
-    <div class="card">
-      <div class="card-idea">🍕 Ghost Kitchen Platform</div>
-      <div class="card-death">CAUSE OF DEATH: Margins of -40% with no path to positive</div>
-      <div class="card-summary">"The burnt-out employee described month 7 — we had 12 kitchens, zero were profitable, the founder kept saying 'scale fixes margins.' It doesn't. Food costs 35%, delivery 30%, rent 20%. You need 85% margins to survive. Food gives you 15%."</div>
-      <div class="card-time">💀 Died in: 11 months</div>
-    </div>
+  <div class="card">
+    <div class="card-idea">🐕 Uber for Dogs</div>
+    <div class="card-death">CAUSE OF DEATH: Unit economics impossible at any scale</div>
+    <div class="card-summary">"The investor destroyed it in seconds — the average dog walk order is $15, drivers cost $12, insurance adds $8. You lose money on every single ride. There is no path to profitability, only a path to bankruptcy."</div>
+    <div class="card-time"><span>💀 Died in: 4 months</span><span class="score-badge">Score: 8/100</span></div>
   </div>
 
-  <a href="/" class="try-btn">💀 Kill My Startup Idea →</a>
+  <div class="card">
+    <div class="card-idea">📚 Netflix for Books</div>
+    <div class="card-death">CAUSE OF DEATH: Amazon Kindle Unlimited already exists</div>
+    <div class="card-summary">"The competitor agent was brutal — Amazon launched Kindle Unlimited in 2014. It has 4 million books, 3 million subscribers, and loses money intentionally to kill exactly you. You have $50k. They have $500 billion."</div>
+    <div class="card-time"><span>💀 Died in: 2 months</span><span class="score-badge">Score: 5/100</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-idea">🤖 AI Lawyer</div>
+    <div class="card-death">CAUSE OF DEATH: Regulatory shutdown + liability</div>
+    <div class="card-summary">"The regulator killed it immediately — providing legal advice without a license is illegal in every US state. One wrong answer and you face a $250,000 fine and criminal charges. The Bar Association is already lobbying against AI legal tools."</div>
+    <div class="card-time"><span>💀 Died in: 1 month</span><span class="score-badge">Score: 12/100</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-idea">🏠 Airbnb for Offices</div>
+    <div class="card-death">CAUSE OF DEATH: WeWork tried with $12B and still failed</div>
+    <div class="card-summary">"The pessimist analyst noted that post-COVID office occupancy is at 48% and declining. WeWork burned $12 billion proving this doesn't work. Remote work is permanent. Your timing is 5 years too late."</div>
+    <div class="card-time"><span>💀 Died in: 6 months</span><span class="score-badge">Score: 18/100</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-idea">💊 Subscription Vitamins</div>
+    <div class="card-death">CAUSE OF DEATH: Customer churn kills subscription health</div>
+    <div class="card-summary">"The lazy customer explained it perfectly — I subscribed to Care/of, Athletic Greens, and Ritual. I cancelled all three within 3 months. Vitamins are boring. I forget to take them. I don't see results. Nobody renews."</div>
+    <div class="card-time"><span>💀 Died in: 8 months</span><span class="score-badge">Score: 22/100</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-idea">🍕 Ghost Kitchen Platform</div>
+    <div class="card-death">CAUSE OF DEATH: Margins of -40% with no path to positive</div>
+    <div class="card-summary">"The burnt-out employee described month 7 — we had 12 kitchens, zero profitable, the founder kept saying 'scale fixes margins.' It doesn't. Food costs 35%, delivery 30%, rent 20%. You need 85% margins to survive. Food gives you 15%."</div>
+    <div class="card-time"><span>💀 Died in: 11 months</span><span class="score-badge">Score: 14/100</span></div>
+  </div>
+
+</div>
+
+<div class="cta">
+  <a href="/" class="btn-cta">💀 Kill My Startup Idea →</a>
+  <p>Free · No signup · 30 seconds</p>
+</div>
+
+<footer>
+  <p>StartupDeath · <a href="/">Home</a> · <a href="/graveyard">Graveyard</a> · <a href="/examples">Examples</a> · <a href="/pricing">Pricing</a></p>
+  <p style="margin-top:6px">Better to know now than after spending your savings.</p>
+</footer>
+
 </body>
 </html>

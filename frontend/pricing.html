@@ -153,11 +153,14 @@
         <li><span class="check">✓</span> All 6 AI agents</li>
         <li><span class="check">✓</span> Certificate of Death</li>
         <li><span class="check">✓</span> Share on Twitter</li>
-        <li><span class="check">✓</span> Save & share results</li>
-        <li><span class="check">✓</span> <strong>Resurrection mode</strong> 🔥</li>
-        <li><span class="check">✓</span> API access</li>
+        <li><span class="check">✓</span> <strong>Save & export results</strong> 💾</li>
+        <li><span class="check">✓</span> Resurrection mode</li>
+        <li><span class="check">✓</span> <strong>API access</strong> 🔌</li>
         <li><span class="check">✓</span> 3× faster analysis</li>
       </ul>
+      <div style="display:flex;gap:8px;margin-bottom:10px">
+        <input type="email" id="pro-email" placeholder="your@email.com" style="flex:1;background:#0a0a0a;border:1px solid #333;border-radius:8px;padding:10px 12px;color:#e8e8e8;font-size:14px;font-family:inherit;outline:none"/>
+      </div>
       <button class="btn btn-pro" onclick="goPro()">Get Pro — $9/month</button>
       <p id="waitlist-success" style="display:none;margin-top:12px;color:#22c55e;font-size:14px;font-weight:600"></p>
     </div>
@@ -187,24 +190,33 @@
     </div>
   </div>
 
+  <div style="margin-top:40px;padding:24px;border-top:1px solid #1a1a1a;text-align:center;color:#333;font-size:13px">
+    <a href="/" style="color:#444;text-decoration:none;margin:0 12px">Home</a>
+    <a href="/graveyard" style="color:#444;text-decoration:none;margin:0 12px">Graveyard</a>
+    <a href="/examples" style="color:#444;text-decoration:none;margin:0 12px">Examples</a>
+  </div>
+
   <script>
     // Load Stripe link from server
     fetch('/api/config').then(r=>r.json()).then(d=>{ if(d.stripe_link) window.STRIPE_LINK = d.stripe_link; });
 
     async function goPro() {
       const btn = document.querySelector('.btn-pro');
-      btn.disabled = true;
-      btn.textContent = '...';
+      const emailInput = document.getElementById('pro-email');
+      const email = emailInput ? emailInput.value.trim() : '';
 
-      // Collect email first
-      const email = prompt('Enter your email to get started:');
       if (!email || !email.includes('@')) {
-        btn.disabled = false;
-        btn.textContent = 'Get Pro — $9/month';
+        if (emailInput) {
+          emailInput.style.borderColor = '#e63030';
+          emailInput.focus();
+          emailInput.placeholder = 'Enter your email first';
+        }
         return;
       }
 
-      // Save to waitlist
+      btn.disabled = true;
+      btn.textContent = 'Redirecting…';
+
       try {
         await fetch('/api/waitlist', {
           method: 'POST',
@@ -213,7 +225,6 @@
         });
       } catch(e) {}
 
-      // Redirect to Stripe (replace with real link when ready)
       const gumroadLink = 'https://innovator825.gumroad.com/l/startupdeath-pro';
       window.location.href = gumroadLink + '?wanted=true&email=' + encodeURIComponent(email);
     }

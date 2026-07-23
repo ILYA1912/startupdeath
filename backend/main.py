@@ -258,6 +258,10 @@ class StartupRequest(BaseModel):
     description: str = ""
     resurrection: bool = False
 
+class ResurrectRequest(BaseModel):
+    idea: str
+    description: str = ""
+
 class EmailRequest(BaseModel):
     email: str
 
@@ -386,6 +390,12 @@ Be brutal, specific, memorable. Reference real companies and real dollar amounts
         "similar_failures": similar_failures,
         "resurrection": resurrection_results
     }
+
+@app.post("/api/resurrect")
+async def resurrect_idea(request: ResurrectRequest):
+    tasks = [run_agent(a, request.idea, request.description) for a in RESURRECTION_AGENTS]
+    results = await asyncio.gather(*tasks)
+    return {"agents": list(results)}
 
 @app.get("/api/config")
 async def get_config():

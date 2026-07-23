@@ -554,9 +554,7 @@
 
     /* Similar failures */
     .similar-section {
-      max-width: 900px;
-      margin: 0 auto 28px;
-      padding: 0 24px;
+      margin-bottom: 28px;
     }
     .similar-grid {
       display: grid;
@@ -671,7 +669,7 @@
 <!-- PRO -->
 <div class="pro-strip">
   <div class="pro-inner">
-    <p><strong>Pro — $9/mo:</strong> Unlimited kills · Save results · Resurrection mode · API access</p>
+    <p><strong>Pro — $9/mo:</strong> Unlimited kills · Save & export results · API access · Priority speed</p>
     <button class="btn-pro" onclick="goPro()">Upgrade →</button>
   </div>
 </div>
@@ -779,11 +777,16 @@
   <div class="resurrect-banner" id="res-banner">
     <h3>⚡ Want to survive?</h3>
     <p>The same 6 experts now flip roles — each one tells you exactly how to fix the fatal flaw they found. A survival plan, not just a death sentence.</p>
-    <button class="btn-resurrect" onclick="resurrect()">Resurrect My Idea — Pro Feature</button>
+    <button class="btn-resurrect" onclick="resurrect()">⚡ Resurrect My Idea — Free</button>
   </div>
   <div id="res-results" style="display:none">
     <p class="results-label" style="color:#c88820">⚡ Resurrection Plan</p>
     <div class="res-grid" id="res-grid"></div>
+    <div class="resurrect-banner" style="background:linear-gradient(135deg,#050510,#0a0a1a);border-color:rgba(130,80,200,0.25);margin-top:20px">
+      <h3 style="color:#c0a0ff">💾 Want to save this survival plan?</h3>
+      <p>Pro gives you unlimited analyses, saved results, and API access — so you can run StartupDeath on every idea before you build.</p>
+      <button class="btn-resurrect" style="background:linear-gradient(135deg,#8040c0,#6020a0);color:#fff" onclick="goPro()">Save Results + Upgrade to Pro — $9/mo</button>
+    </div>
   </div>
 
   <!-- Share -->
@@ -801,7 +804,7 @@
 </div>
 
 <footer>
-  <p>StartupDeath · <a href="/graveyard">Graveyard</a> · <a href="/pricing">Pricing</a> · <a href="https://github.com/ILYA1912/startupdeath" target="_blank">GitHub</a></p>
+  <p>StartupDeath · <a href="/graveyard">Graveyard</a> · <a href="/examples">Examples</a> · <a href="/pricing">Pricing</a> · <a href="https://github.com/ILYA1912/startupdeath" target="_blank">GitHub</a></p>
   <p style="margin-top:6px">Better to know now than after spending your savings.</p>
 </footer>
 
@@ -939,8 +942,22 @@
   }
 
   function copyResult() {
-    navigator.clipboard.writeText(`My startup idea "${currentIdea}" was destroyed by AI 💀\nhttps://startupdeath.onrender.com`);
-    alert('Copied!');
+    const text = `My startup idea "${currentIdea}" was destroyed by AI 💀\nhttps://startupdeath.onrender.com`;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(() => alert('Copied!')).catch(() => fallbackCopy(text));
+    } else {
+      fallbackCopy(text);
+    }
+  }
+
+  function fallbackCopy(text) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0';
+    document.body.appendChild(ta);
+    ta.focus(); ta.select();
+    try { document.execCommand('copy'); alert('Copied!'); } catch(e) {}
+    document.body.removeChild(ta);
   }
 
   function tryAgain() {
@@ -993,7 +1010,40 @@
   }
 
   async function resurrect() {
-    window.location.href = '/pricing';
+    const btn = document.querySelector('.btn-resurrect');
+    btn.disabled = true;
+    btn.textContent = '⚡ Resurrecting…';
+
+    try {
+      const r = await fetch('/api/resurrect', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ idea: currentIdea, description: document.getElementById('desc').value.trim() })
+      });
+      const data = await r.json();
+
+      const grid = document.getElementById('res-grid');
+      grid.innerHTML = '';
+      data.agents.forEach(a => {
+        const parts = a.verdict.split(/THE FIX:/);
+        grid.innerHTML += `
+          <div class="res-card">
+            <div class="agent-name">${a.agent}</div>
+            <div class="agent-text">
+              ${parts[0].trim()}
+              ${parts[1] ? '<span class="res-fix">THE FIX: ' + parts[1].trim() + '</span>' : ''}
+            </div>
+          </div>`;
+      });
+
+      document.getElementById('res-banner').style.display = 'none';
+      document.getElementById('res-results').style.display = 'block';
+      document.getElementById('res-results').scrollIntoView({ behavior: 'smooth' });
+    } catch(e) {
+      btn.disabled = false;
+      btn.textContent = '⚡ Resurrect My Idea — Free';
+      alert('Connection error. Please try again.');
+    }
   }
 </script>
 </body>

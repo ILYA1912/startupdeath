@@ -70,15 +70,14 @@
 </div>
 
 <script>
-  // Mark as paid so future resurrections show all 6
   localStorage.setItem('sd_unlocked', '1');
 
+  const idea = localStorage.getItem('sd_idea_pending') || '';
+  const desc = localStorage.getItem('sd_desc_pending') || '';
   const resData = localStorage.getItem('sd_res_pending');
-  const idea = localStorage.getItem('sd_idea_pending');
 
-  if (resData && idea) {
+  function renderAgents(agents) {
     document.getElementById('idea-display').textContent = idea;
-    const agents = JSON.parse(resData);
     const grid = document.getElementById('res-grid');
     agents.forEach(a => {
       const parts = a.verdict.split(/THE FIX:/);
@@ -93,7 +92,30 @@
     });
     localStorage.removeItem('sd_res_pending');
     localStorage.removeItem('sd_idea_pending');
+    localStorage.removeItem('sd_desc_pending');
     document.getElementById('content-loaded').style.display = 'block';
+  }
+
+  if (resData && idea) {
+    renderAgents(JSON.parse(resData));
+  } else if (idea) {
+    // Call the API ourselves
+    document.getElementById('content-loaded').style.display = 'block';
+    document.getElementById('idea-display').textContent = idea;
+    document.getElementById('res-grid').innerHTML = '<p style="color:#555;font-size:14px;padding:20px">Generating your survival plan...</p>';
+    fetch('/api/resurrect', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ idea, description: desc })
+    })
+    .then(r => r.json())
+    .then(data => {
+      document.getElementById('res-grid').innerHTML = '';
+      renderAgents(data.agents || []);
+    })
+    .catch(() => {
+      document.getElementById('res-grid').innerHTML = '<p style="color:#e63030;font-size:14px;padding:20px">Error loading plan. Please email us at support@startupdeath.com with your idea and we\'ll send it manually.</p>';
+    });
   } else {
     document.getElementById('content-empty').style.display = 'block';
   }

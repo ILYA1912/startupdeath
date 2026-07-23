@@ -821,10 +821,29 @@
   </div>
 
   <!-- Resurrection -->
-  <div class="resurrect-banner" id="res-banner">
-    <h3>⚡ Want to survive?</h3>
-    <p>The same 6 experts flip roles — each one shows you exactly how to fix the fatal flaw they found. One fix is free. Unlock all 6 for $3.</p>
-    <button class="btn-resurrect" onclick="resurrect()">⚡ See Survival Plan</button>
+  <div class="resurrect-banner" id="res-banner" style="display:none">
+    <h3>⚡ Your startup can be saved.</h3>
+    <p>The same 8 experts who just destroyed your idea flip roles — each one reveals exactly how to fix the fatal flaw they found.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0;filter:blur(5px);pointer-events:none;user-select:none">
+      <div style="background:#111;border:1px solid #2a2a2a;border-radius:10px;padding:14px;text-align:left">
+        <div style="font-size:12px;font-weight:700;color:#c88820;margin-bottom:6px">💰 Investor Fix</div>
+        <div style="font-size:12px;color:#555;line-height:1.6">Reframe the pitch around enterprise contracts first. The consumer angle kills your funding story — pivot to B2B SaaS with...</div>
+      </div>
+      <div style="background:#111;border:1px solid #2a2a2a;border-radius:10px;padding:14px;text-align:left">
+        <div style="font-size:12px;font-weight:700;color:#c88820;margin-bottom:6px">😴 Customer Fix</div>
+        <div style="font-size:12px;color:#555;line-height:1.6">Add a one-click import from existing tools. The switching cost is the killer — reduce onboarding to under 3 minutes...</div>
+      </div>
+      <div style="background:#111;border:1px solid #2a2a2a;border-radius:10px;padding:14px;text-align:left">
+        <div style="font-size:12px;font-weight:700;color:#c88820;margin-bottom:6px">🔪 Competitor Fix</div>
+        <div style="font-size:12px;color:#555;line-height:1.6">Own a niche they can't follow you into. Don't compete head-on — pick the vertical where their UX is weakest...</div>
+      </div>
+      <div style="background:#111;border:1px solid #2a2a2a;border-radius:10px;padding:14px;text-align:left">
+        <div style="font-size:12px;font-weight:700;color:#c88820;margin-bottom:6px">💸 Financial Fix</div>
+        <div style="font-size:12px;color:#555;line-height:1.6">Charge $299/month minimum. Your current pricing makes unit economics impossible — you need 8x higher ACV...</div>
+      </div>
+    </div>
+    <button class="btn-unlock" onclick="unlockResurrection()" style="width:100%;font-size:16px;padding:16px">🔓 Unlock Full Survival Plan — $3</button>
+    <p class="unlock-note" style="margin-top:10px">One-time payment · No subscription · Instant access to all 8 fixes</p>
   </div>
   <div id="res-results" style="display:none">
     <p class="results-label" style="color:#c88820">⚡ Resurrection Plan — 1 of 6 free</p>
@@ -1170,9 +1189,10 @@
   }
 
   function unlockResurrection() {
+    localStorage.setItem('sd_idea_pending', currentIdea || '');
+    localStorage.setItem('sd_desc_pending', document.getElementById('desc')?.value || '');
     if (currentResData) {
       localStorage.setItem('sd_res_pending', JSON.stringify(currentResData));
-      localStorage.setItem('sd_idea_pending', currentIdea);
     }
     window.location.href = 'https://innovator825.gumroad.com/l/startupdeath-survival?wanted=true';
   }

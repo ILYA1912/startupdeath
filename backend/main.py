@@ -383,7 +383,7 @@ Be brutal, specific, memorable. Reference real companies and real dollar amounts
         "survival_score": parsed["survival_score"],
         "category": parsed["category"],
         "graveyard_id": graveyard_entry["id"],
-        "similar_failures": [f["name"] for f in similar_failures],
+        "similar_failures": similar_failures,
         "resurrection": resurrection_results
     }
 

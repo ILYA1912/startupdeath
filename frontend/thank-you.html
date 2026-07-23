@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>You're Unlocked — StartupDeath</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Playfair+Display:wght@900&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --red: #e63030; --orange: #e8720c; --bg: #0a0a0a; --bg2: #111; --border: #1f1f1f; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: #e8e8e8; min-height: 100vh; padding: 60px 24px; -webkit-font-smoothing: antialiased; }
+    .wrap { max-width: 860px; margin: 0 auto; }
+    .badge { display: inline-block; background: rgba(74,222,128,0.1); border: 1px solid rgba(74,222,128,0.3); color: #4ade80; font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 6px 16px; border-radius: 100px; margin-bottom: 24px; }
+    h1 { font-family: 'Playfair Display', serif; font-size: clamp(28px, 4vw, 44px); font-weight: 900; margin-bottom: 12px; }
+    h1 em { font-style: normal; background: linear-gradient(135deg, var(--red), var(--orange)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .sub { color: #666; font-size: 16px; margin-bottom: 48px; line-height: 1.6; }
+    .idea-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: #555; margin-bottom: 8px; }
+    .idea-name { font-size: 22px; font-weight: 800; color: #fff; margin-bottom: 40px; padding: 16px 20px; background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; }
+    .section-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: #555; margin-bottom: 16px; }
+    .res-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 14px; margin-bottom: 48px; }
+    .res-card { background: linear-gradient(135deg, #090900, #0d0d00); border: 1px solid rgba(232,114,12,0.15); border-radius: 14px; padding: 22px; }
+    .agent-name { font-size: 14px; font-weight: 700; color: #c88820; margin-bottom: 12px; }
+    .agent-text { font-size: 14px; color: #777; line-height: 1.8; }
+    .res-fix { color: #4ade80; font-weight: 600; margin-top: 10px; display: block; font-size: 14px; }
+    .actions { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 48px; }
+    .btn-primary { background: linear-gradient(135deg, var(--red), var(--orange)); border: none; border-radius: 10px; padding: 14px 28px; color: #fff; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; text-decoration: none; transition: opacity 0.2s; }
+    .btn-primary:hover { opacity: 0.88; }
+    .btn-secondary { background: transparent; border: 1px solid var(--border); border-radius: 10px; padding: 14px 28px; color: #888; font-size: 15px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; text-decoration: none; transition: border-color 0.2s; }
+    .btn-secondary:hover { border-color: rgba(230,48,48,0.4); color: #ccc; }
+    .pro-box { background: linear-gradient(135deg, #0e0a00, #1a1000); border: 1px solid rgba(232,114,12,0.25); border-radius: 16px; padding: 28px; text-align: center; }
+    .pro-box h3 { font-size: 18px; font-weight: 800; color: #e8a020; margin-bottom: 8px; }
+    .pro-box p { color: #666; font-size: 14px; margin-bottom: 18px; line-height: 1.6; }
+    .empty { text-align: center; padding: 60px 24px; color: #444; }
+    .empty h2 { font-size: 22px; font-weight: 700; margin-bottom: 12px; color: #555; }
+    @media (max-width: 600px) { .res-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <div id="content-loaded" style="display:none">
+    <div class="badge">✅ Payment confirmed · All 6 fixes unlocked</div>
+    <h1>Your Startup's<br><em>Survival Plan</em></h1>
+    <p class="sub">All 6 experts have flipped roles. Here's how to fix every flaw they found.</p>
+    <div class="idea-label">Idea analyzed</div>
+    <div class="idea-name" id="idea-display"></div>
+    <p class="section-label">⚡ 6 Survival Strategies</p>
+    <div class="res-grid" id="res-grid"></div>
+    <div class="actions">
+      <a href="/" class="btn-primary">💀 Kill another idea</a>
+      <button class="btn-secondary" onclick="window.print()">🖨️ Print / Save PDF</button>
+    </div>
+    <div class="pro-box">
+      <h3>Run this on every idea before you build</h3>
+      <p>Pro gives you unlimited analyses, saved results to your account, and API access — so your whole team can use it.</p>
+      <a href="/pricing" class="btn-primary">Upgrade to Pro — $9/month</a>
+    </div>
+  </div>
+
+  <div id="content-empty" style="display:none" class="empty">
+    <h2>💀 Nothing here yet</h2>
+    <p>Go analyze a startup idea first, then unlock the survival plan.</p>
+    <br/>
+    <a href="/" class="btn-primary" style="display:inline-block;margin-top:16px">Kill My Idea →</a>
+  </div>
+
+</div>
+
+<script>
+  // Mark as paid so future resurrections show all 6
+  localStorage.setItem('sd_unlocked', '1');
+
+  const resData = localStorage.getItem('sd_res_pending');
+  const idea = localStorage.getItem('sd_idea_pending');
+
+  if (resData && idea) {
+    document.getElementById('idea-display').textContent = idea;
+    const agents = JSON.parse(resData);
+    const grid = document.getElementById('res-grid');
+    agents.forEach(a => {
+      const parts = a.verdict.split(/THE FIX:/);
+      grid.innerHTML += `
+        <div class="res-card">
+          <div class="agent-name">${a.agent}</div>
+          <div class="agent-text">
+            ${parts[0].trim()}
+            ${parts[1] ? '<span class="res-fix">THE FIX: ' + parts[1].trim() + '</span>' : ''}
+          </div>
+        </div>`;
+    });
+    localStorage.removeItem('sd_res_pending');
+    localStorage.removeItem('sd_idea_pending');
+    document.getElementById('content-loaded').style.display = 'block';
+  } else {
+    document.getElementById('content-empty').style.display = 'block';
+  }
+</script>
+</body>
+</html>

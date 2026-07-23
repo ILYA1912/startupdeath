@@ -12,6 +12,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet"/>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -508,6 +509,28 @@
     .res-card .agent-name { color: #c88820; }
     .res-fix { color: #4ade80; font-weight: 600; margin-top: 10px; display: block; font-size: 14px; }
 
+    /* Locked resurrection */
+    .res-lock { position: relative; margin-top: 14px; }
+    .res-locked-cards { filter: blur(6px); pointer-events: none; user-select: none; }
+    .unlock-overlay {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 32px;
+      background: radial-gradient(ellipse at center, rgba(8,4,0,0.92) 0%, rgba(0,0,0,0.75) 100%);
+      border-radius: 14px;
+    }
+    .unlock-overlay h3 { font-size: 20px; font-weight: 800; color: #e8a020; margin-bottom: 10px; }
+    .unlock-overlay p { color: #888; font-size: 14px; line-height: 1.6; max-width: 380px; margin-bottom: 20px; }
+    .btn-unlock {
+      background: linear-gradient(135deg, #e8720c, #c45500);
+      border: none; border-radius: 10px; padding: 14px 32px;
+      color: #fff; font-size: 15px; font-weight: 800;
+      cursor: pointer; font-family: 'Inter', sans-serif;
+      box-shadow: 0 4px 24px rgba(232,114,12,0.4); transition: opacity 0.2s;
+    }
+    .btn-unlock:hover { opacity: 0.88; }
+    .unlock-note { font-size: 12px; color: #555; margin-top: 10px; }
+
     /* Survival Score */
     .score-block {
       display: flex;
@@ -776,16 +799,20 @@
   <!-- Resurrection -->
   <div class="resurrect-banner" id="res-banner">
     <h3>⚡ Want to survive?</h3>
-    <p>The same 6 experts now flip roles — each one tells you exactly how to fix the fatal flaw they found. A survival plan, not just a death sentence.</p>
-    <button class="btn-resurrect" onclick="resurrect()">⚡ Resurrect My Idea — Free</button>
+    <p>The same 6 experts flip roles — each one shows you exactly how to fix the fatal flaw they found. One fix is free. Unlock all 6 for $3.</p>
+    <button class="btn-resurrect" onclick="resurrect()">⚡ See Survival Plan</button>
   </div>
   <div id="res-results" style="display:none">
-    <p class="results-label" style="color:#c88820">⚡ Resurrection Plan</p>
+    <p class="results-label" style="color:#c88820">⚡ Resurrection Plan — 1 of 6 free</p>
     <div class="res-grid" id="res-grid"></div>
-    <div class="resurrect-banner" style="background:linear-gradient(135deg,#050510,#0a0a1a);border-color:rgba(130,80,200,0.25);margin-top:20px">
-      <h3 style="color:#c0a0ff">💾 Want to save this survival plan?</h3>
-      <p>Pro gives you unlimited analyses, saved results, and API access — so you can run StartupDeath on every idea before you build.</p>
-      <button class="btn-resurrect" style="background:linear-gradient(135deg,#8040c0,#6020a0);color:#fff" onclick="goPro()">Save Results + Upgrade to Pro — $9/mo</button>
+    <div class="res-lock" id="res-lock" style="display:none">
+      <div class="res-grid res-locked-cards" id="res-locked-cards"></div>
+      <div class="unlock-overlay">
+        <h3>🔒 5 survival strategies locked</h3>
+        <p>Each of the remaining 5 experts shows your specific fix — the investor pivot, legal path, competitor gap, team structure, and market timing.</p>
+        <button class="btn-unlock" onclick="unlockResurrection()">🔓 Unlock All 5 Fixes — $3</button>
+        <p class="unlock-note">One-time · No subscription · Instant access</p>
+      </div>
     </div>
   </div>
 
@@ -1009,6 +1036,19 @@
     document.getElementById('similar-section').style.display = 'block';
   }
 
+  let currentResData = null;
+
+  function renderResCard(a) {
+    const parts = a.verdict.split(/THE FIX:/);
+    return `<div class="res-card">
+      <div class="agent-name">${a.agent}</div>
+      <div class="agent-text">
+        ${parts[0].trim()}
+        ${parts[1] ? '<span class="res-fix">THE FIX: ' + parts[1].trim() + '</span>' : ''}
+      </div>
+    </div>`;
+  }
+
   async function resurrect() {
     const btn = document.querySelector('.btn-resurrect');
     btn.disabled = true;
@@ -1021,29 +1061,41 @@
         body: JSON.stringify({ idea: currentIdea, description: document.getElementById('desc').value.trim() })
       });
       const data = await r.json();
+      currentResData = data.agents;
 
-      const grid = document.getElementById('res-grid');
-      grid.innerHTML = '';
-      data.agents.forEach(a => {
-        const parts = a.verdict.split(/THE FIX:/);
-        grid.innerHTML += `
-          <div class="res-card">
-            <div class="agent-name">${a.agent}</div>
-            <div class="agent-text">
-              ${parts[0].trim()}
-              ${parts[1] ? '<span class="res-fix">THE FIX: ' + parts[1].trim() + '</span>' : ''}
-            </div>
-          </div>`;
-      });
+      const unlocked = localStorage.getItem('sd_unlocked');
+
+      // First card always visible
+      document.getElementById('res-grid').innerHTML = renderResCard(data.agents[0]);
+
+      if (unlocked) {
+        // Already paid — show all
+        data.agents.slice(1).forEach(a => {
+          document.getElementById('res-grid').innerHTML += renderResCard(a);
+        });
+      } else {
+        // Show remaining 5 locked
+        const lockedCards = document.getElementById('res-locked-cards');
+        lockedCards.innerHTML = data.agents.slice(1).map(renderResCard).join('');
+        document.getElementById('res-lock').style.display = 'block';
+      }
 
       document.getElementById('res-banner').style.display = 'none';
       document.getElementById('res-results').style.display = 'block';
       document.getElementById('res-results').scrollIntoView({ behavior: 'smooth' });
     } catch(e) {
       btn.disabled = false;
-      btn.textContent = '⚡ Resurrect My Idea — Free';
+      btn.textContent = '⚡ See Survival Plan';
       alert('Connection error. Please try again.');
     }
+  }
+
+  function unlockResurrection() {
+    if (currentResData) {
+      localStorage.setItem('sd_res_pending', JSON.stringify(currentResData));
+      localStorage.setItem('sd_idea_pending', currentIdea);
+    }
+    window.location.href = 'https://innovator825.gumroad.com/l/startupdeath-survival?wanted=true';
   }
 </script>
 </body>

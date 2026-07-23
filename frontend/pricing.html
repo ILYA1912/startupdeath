@@ -27,7 +27,7 @@
       flex-wrap: wrap;
       justify-content: center;
       width: 100%;
-      max-width: 800px;
+      max-width: 1100px;
     }
     .plan {
       background: #111;
@@ -125,7 +125,7 @@
 
   <div class="plans">
     <!-- FREE -->
-    <div class="plan">
+    <div class="plan" style="min-width:240px;max-width:300px">
       <div class="plan-name">FREE</div>
       <div class="plan-price">$0 <span>/ forever</span></div>
       <div class="plan-desc">Good enough to hurt</div>
@@ -134,12 +134,31 @@
         <li><span class="check">✓</span> All 6 AI agents</li>
         <li><span class="check">✓</span> Certificate of Death</li>
         <li><span class="check">✓</span> Share on Twitter</li>
+        <li><span class="check">✓</span> 1 survival strategy</li>
+        <li><span class="cross">✗</span> Full survival plan (6/6)</li>
         <li><span class="cross">✗</span> Save results</li>
-        <li><span class="cross">✗</span> Resurrection mode</li>
         <li><span class="cross">✗</span> API access</li>
-        <li><span class="cross">✗</span> Priority speed</li>
       </ul>
       <a href="/" class="btn btn-free">Start Free</a>
+    </div>
+
+    <!-- ONE-TIME -->
+    <div class="plan" style="min-width:240px;max-width:300px;border-color:#e8720c">
+      <div class="badge" style="background:linear-gradient(135deg,#e8720c,#c45500)">MOST BOUGHT</div>
+      <div class="plan-name">ONE-TIME</div>
+      <div class="plan-price">$3 <span>/ one idea</span></div>
+      <div class="plan-desc">Pay once, no subscription</div>
+      <ul class="features">
+        <li><span class="check">✓</span> Full analysis</li>
+        <li><span class="check">✓</span> All 6 AI agents</li>
+        <li><span class="check">✓</span> Certificate of Death</li>
+        <li><span class="check">✓</span> Share on Twitter</li>
+        <li><span class="check">✓</span> <strong>Full survival plan (6/6)</strong> ⚡</li>
+        <li><span class="cross">✗</span> Save to account</li>
+        <li><span class="cross">✗</span> Unlimited analyses</li>
+        <li><span class="cross">✗</span> API access</li>
+      </ul>
+      <a href="https://innovator825.gumroad.com/l/startupdeath-survival?wanted=true" class="btn" style="display:block;width:100%;padding:16px;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;border:none;text-align:center;text-decoration:none;background:linear-gradient(135deg,#e8720c,#c45500);color:#fff;transition:opacity 0.2s" onmouseover="this.style.opacity=0.85" onmouseout="this.style.opacity=1">Get Survival Plan — $3</a>
     </div>
 
     <!-- PRO -->

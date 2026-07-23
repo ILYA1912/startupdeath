@@ -291,10 +291,18 @@ def parse_summary_fields(text: str):
         "time_to_death": time_match.group(1).strip() if time_match else "12 months"
     }
 
+def clean_idea(text: str) -> str:
+    import re
+    text = re.sub(r'https?://\S+', '', text)
+    return text.strip()
+
 def run_agent_sync(agent: dict, idea: str, description: str, failures_context: str = "") -> dict:
+    idea = clean_idea(idea)
     failures_line = f"\nREAL COMPANIES THAT TRIED THIS AND DIED: {failures_context}" if failures_context else ""
     prompt = f"""Startup idea: {idea}
 {"Description: " + description if description else ""}{failures_line}
+
+IMPORTANT: Your analysis must be specifically about this exact startup idea. Do not drift to unrelated markets or customer segments unless directly relevant.
 
 {agent['role']}
 

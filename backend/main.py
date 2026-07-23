@@ -6,6 +6,7 @@ from datetime import date
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from dotenv import load_dotenv
 from groq import Groq
@@ -390,6 +391,64 @@ Be brutal, specific, memorable. Reference real companies and real dollar amounts
         "similar_failures": similar_failures,
         "resurrection": resurrection_results
     }
+
+@app.post("/api/analyze-stream")
+async def analyze_stream(request: StartupRequest):
+    async def generate():
+        similar_failures = find_similar_failures(request.idea)
+        failures_context = format_failures(similar_failures)
+
+        queue = asyncio.Queue()
+
+        async def run_and_push(agent, idx):
+            fc = failures_context if agent.get("use_failures") else ""
+            result = await run_agent(agent, request.idea, request.description, fc)
+            await queue.put((idx, result))
+
+        tasks = [asyncio.create_task(run_and_push(a, i)) for i, a in enumerate(AGENTS)]
+
+        for _ in range(len(AGENTS)):
+            idx, result = await queue.get()
+            yield f"data: {json.dumps({'type': 'agent', 'index': idx, 'data': result})}\n\n"
+
+        await asyncio.gather(*tasks, return_exceptions=True)
+
+        summary_prompt = f"""Startup idea: "{request.idea}"
+REAL FAILED STARTUPS IN THIS SPACE: {failures_context}
+
+Six brutal experts just destroyed this startup. Write a Certificate of Death using EXACTLY this format:
+
+SURVIVAL SCORE: [single number 0-100, where 0=dead on arrival. Most ideas score 10-40]
+CATEGORY: [pick exactly one: SaaS / Marketplace / Consumer App / EdTech / FinTech / HealthTech / E-commerce / Media / Hardware / Other]
+MAIN CAUSE OF DEATH: [one savage sentence — the #1 fatal flaw]
+TIME TO DEATH: [X months, be specific, range 2-18]
+CAUSE #2: [second killer]
+CAUSE #3: [third killer]
+FOUNDER'S LAST WORDS: "[darkly funny quote the founder would actually say]"
+AUTOPSY NOTES: [one dark humor sentence referencing a real failed company from the list above]
+
+Be brutal, specific, memorable. Reference real companies and real dollar amounts."""
+
+        loop = asyncio.get_event_loop()
+        summary_msg = await loop.run_in_executor(None, lambda: client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            max_tokens=380,
+            messages=[{"role": "user", "content": summary_prompt}]
+        ))
+
+        summary_text = summary_msg.choices[0].message.content
+        parsed = parse_summary_fields(summary_text)
+        increment_kill_count()
+        graveyard_entry = save_to_graveyard(
+            request.idea, parsed["category"], parsed["survival_score"],
+            parsed["cause_of_death"], parsed["time_to_death"]
+        )
+
+        yield f"data: {json.dumps({'type': 'summary', 'idea': request.idea, 'summary': summary_text, 'survival_score': parsed['survival_score'], 'category': parsed['category'], 'graveyard_id': graveyard_entry['id'], 'similar_failures': similar_failures})}\n\n"
+
+    return StreamingResponse(generate(), media_type="text/event-stream", headers={
+        "Cache-Control": "no-cache", "X-Accel-Buffering": "no", "Connection": "keep-alive"
+    })
 
 @app.post("/api/resurrect")
 async def resurrect_idea(request: ResurrectRequest):

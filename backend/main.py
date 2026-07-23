@@ -2,14 +2,17 @@ import os
 import asyncio
 import json
 import re
+import io
 from datetime import date
-from fastapi import FastAPI
+from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from dotenv import load_dotenv
 from groq import Groq
+import PyPDF2
+import docx
 
 load_dotenv()
 
@@ -224,6 +227,16 @@ AGENTS = [
         "name": "📉 Pessimist Analyst",
         "role": "You are a senior market analyst at Goldman Sachs. Prove with specific data why this startup is entering at the worst possible moment: market saturation stats, macro headwinds, consumer behavior shifts, regulatory changes coming, or why the window of opportunity already closed. Reference the real failed companies in this space and their burn rates. Be precise with numbers. End with 'VERDICT:' and one sentence.",
         "use_failures": True
+    },
+    {
+        "name": "💸 Financial Executioner",
+        "role": "You are a ruthless CFO who has destroyed 200 startup financial models. Tear apart the unit economics with real numbers: estimate realistic CAC for this market (give a dollar figure), calculate the LTV needed to be profitable, expose the gross margin problem, calculate how much runway they need before break-even and why they'll run out of money first. If they uploaded a business plan, destroy every financial assumption in it with specific counter-numbers. Find the ONE metric that makes this business mathematically impossible. End with 'VERDICT:' and the exact number that kills them.",
+        "use_failures": False
+    },
+    {
+        "name": "🧠 Management Destroyer",
+        "role": "You are a serial CEO who has built and sold 3 companies and watched 50 others implode from the inside. Destroy the management and execution reality: who is actually going to do the work, what happens when the co-founders disagree on equity split, who makes the hard calls when there's no money left, how will they hire when they can't pay market salaries, what happens to culture when they scale from 3 to 30 people. Describe the exact moment the team falls apart — the specific meeting, the specific argument. Reference real startup team disasters. End with 'VERDICT:' and the management failure that will kill them first.",
+        "use_failures": False
     }
 ]
 
@@ -297,6 +310,35 @@ Write 2-3 sharp paragraphs. Be specific, name real companies and real numbers.""
 async def run_agent(agent: dict, idea: str, description: str, failures_context: str = "") -> dict:
     loop = asyncio.get_event_loop()
     return await loop.run_in_executor(None, run_agent_sync, agent, idea, description, failures_context)
+
+@app.post("/api/upload-plan")
+async def upload_plan(file: UploadFile = File(...)):
+    content = await file.read()
+    text = ""
+    fname = (file.filename or "").lower()
+
+    try:
+        if fname.endswith(".pdf"):
+            reader = PyPDF2.PdfReader(io.BytesIO(content))
+            for page in reader.pages:
+                text += (page.extract_text() or "") + "\n"
+        elif fname.endswith(".docx"):
+            doc = docx.Document(io.BytesIO(content))
+            text = "\n".join(p.text for p in doc.paragraphs if p.text.strip())
+        else:
+            text = content.decode("utf-8", errors="ignore")
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Could not parse file: {str(e)}")
+
+    text = text.strip()
+    if not text:
+        raise HTTPException(status_code=400, detail="No text found in file")
+
+    # Truncate to 4000 chars to fit in prompt
+    if len(text) > 4000:
+        text = text[:4000] + "\n...[truncated]"
+
+    return {"text": text, "chars": len(text)}
 
 @app.get("/api/stats")
 async def get_stats():
